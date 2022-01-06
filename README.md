@@ -21,21 +21,25 @@ enum class HwinfoReadingType
 ```
 
 ### Referenses:
+
 - https://codebeautify.org/jsonviewer
+- https://github.com/iganeshk/LaMetric-System-Monitor
 
 ### Credits:
+
 - https://github.com/Demion/remotehwinfo
+- https://www.hwinfo.com/forum/threads/introducing-remote-sensor-monitor-a-restful-web-server.1025/page-4
 
 ### Changelog:
 
 - **v0.4** - [RemoteHWInfo v0.4](https://github.com/Demion/remotehwinfo/releases/download/v0.4/RemoteHWInfo_v0.4.zip)
-  * Add log file switch option.
+  - Add log file switch option.
 - **v0.3** - [RemoteHWInfo v0.3](https://github.com/Demion/remotehwinfo/releases/download/v0.3/RemoteHWInfo_v0.3.zip)
-  * Fix buffer overflow.
-  * Update index.html format.
+  - Fix buffer overflow.
+  - Update index.html format.
 - **v0.2** - [RemoteHWInfo v0.2](https://github.com/Demion/remotehwinfo/releases/download/v0.2/RemoteHWInfo_v0.2.zip)
-  * Add GPU-Z monitoring.
-  * Add MSI Afterburner monitoring.
+  - Add GPU-Z monitoring.
+  - Add MSI Afterburner monitoring.
 - **v0.1** - [RemoteHWInfo v0.1](https://github.com/Demion/remotehwinfo/releases/download/v0.1/RemoteHWInfo_v0.1.zip)
 
 ### About:
@@ -44,17 +48,18 @@ RemoteHWInfo HWiNFO / GPU-Z / MSI Afterburner Remote Monitor HTTP JSON Web Serve
 
 ### Usage:
 
-- **-port** *(60000 = default)*
-- **-hwinfo** *(0 = disable; 1 = enable = default)*
-- **-gpuz** *(0 = disable; 1 = enable = default)*
-- **-afterburner** *(0 = disable; 1 = enable = default)*
-- **-log** *(0 = disable; 1 = enable = default)*
+- **-port** _(60000 = default)_
+- **-hwinfo** _(0 = disable; 1 = enable = default)_
+- **-gpuz** _(0 = disable; 1 = enable = default)_
+- **-afterburner** _(0 = disable; 1 = enable = default)_
+- **-log** _(0 = disable; 1 = enable = default)_
 - **-help**
-+ http<nolink>://ip:port/**json.json** *(UTF-8)*
-	+ http<nolink>://ip:port/json.json?**enable=0,1,2,3** *(0,1,2,3 = entryIndex)*
-	+ http<nolink>://ip:port/json.json?**disable=0,1,2,3** *(0,1,2,3 = entryIndex)*
-+ http<nolink>://ip:port/**index.html** *(UTF-8)*
-+ http<nolink>://ip:port/**404.html** *(UTF-8)*
+
+* http<nolink>://ip:port/**json.json** _(UTF-8)_
+  - http<nolink>://ip:port/json.json?**enable=0,1,2,3** _(0,1,2,3 = entryIndex)_
+  - http<nolink>://ip:port/json.json?**disable=0,1,2,3** _(0,1,2,3 = entryIndex)_
+* http<nolink>://ip:port/**index.html** _(UTF-8)_
+* http<nolink>://ip:port/**404.html** _(UTF-8)_
 
 ### Credits:
 
