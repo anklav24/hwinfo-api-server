@@ -1,3 +1,31 @@
+- Copy and run HWiNFO Portable x32 v7.16-4650 from RemoteHWInfo_v0.4 (Sensors-only mode)
+- Run GPU-Z (In my case from `winget install GPU-Z` (2.41.0))
+- Run Afterburner v4.6.4.16094 Beta 3 (Just install as usual)
+- Run .\remotehwinfo.exe (Run as administrator)
+- Go to browser `http://localhost:60000/json.json`
+
+```
+
+enum class HwinfoReadingType
+{
+	None,
+	Temp,
+	Voltage,
+	Fan,
+	Current,
+	Power,
+	Clock,
+	Usage,
+	Other
+};
+```
+
+### Referenses:
+- https://codebeautify.org/jsonviewer
+
+### Credits:
+- https://github.com/Demion/remotehwinfo
+
 ### Changelog:
 
 - **v0.4** - [RemoteHWInfo v0.4](https://github.com/Demion/remotehwinfo/releases/download/v0.4/RemoteHWInfo_v0.4.zip)
