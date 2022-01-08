@@ -4,8 +4,9 @@
 
 ### Installation
 
-- Install Python
-- Add python.exe to Environment Variables
+- Install Python above 3.10
+- Add python path to Environment Variables (User and system variables)
+- restart powershell
 
 ### Optional
 
@@ -21,10 +22,13 @@
 
 ### Links
 
-- http://localhost:60000
-- http://localhost:60000/json.json
-- http://localhost:50000/values
-- http://localhost:50000/hardware
+- remotehwinfo
+    - http://localhost:60005
+    - http://localhost:60005/json.json
+- python flask server
+    - http://localhost:50000
+    - http://localhost:50000/values
+    - http://localhost:50000/hardware
 
 ```
 enum class HwinfoReadingType
