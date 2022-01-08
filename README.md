@@ -1,22 +1,40 @@
-- Copy and run HWiNFO Portable x32 v7.16-4650 from RemoteHWInfo_v0.4 (Sensors-only mode)
-- Run GPU-Z (In my case from `winget install GPU-Z` (2.41.0))
-- Run Afterburner v4.6.4.16094 Beta 3 (Just install as usual)
-- Run .\remotehwinfo.exe (Run as administrator)
-- Go to browser `http://localhost:60000/json.json`
+### Install python things
+```powershell
+python -m venv venv
+.\venv\Scripts\Activate.ps1  # If your IDE has not to do it.
+pip install -U pip
+pip install -r requirements.txt
+```
+### Run server (python flask)
+```powershell
+$env:FLASK_APP = "get_hwinfo_values"
+flask run
+```
+
+- run HWiNFO Portable x32 v7.16-4650 from RemoteHWInfo_v0.4 (Sensors-only mode)
+- Optional: Run GPU-Z (In my case from `winget install GPU-Z` (2.41.0))
+- Optional: Run Afterburner v4.6.4.16094 Beta 3 (Just install as usual)
+- Optional: Run .\remotehwinfo.exe (Run as administrator)
+
+### Links
+- http://localhost:60000
+- http://localhost:60000/json.json
+- http://localhost:50000/values
+- http://localhost:50000/hardware
 
 ```
 
 enum class HwinfoReadingType
 {
-	None,
-	Temp,
-	Voltage,
-	Fan,
-	Current,
-	Power,
-	Clock,
-	Usage,
-	Other
+	None, 0
+	Temp, 1 
+	Voltage, 2 
+	Fan, 3 
+	Current, 4 
+	Power, 5 
+	Clock, 6
+	Usage, 7
+	Other 8
 };
 ```
 
