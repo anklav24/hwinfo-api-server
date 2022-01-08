@@ -2,18 +2,19 @@
 # coding=utf-8
 
 import os
+import subprocess
 
 import flask
 import requests
 
 # Connection
 REMOTE_HWINFO_IP = 'localhost'  # Default: localhost
-REMOTE_HWINFO_PORT = '60000'  # Default: 60000
+REMOTE_HWINFO_PORT = 60005  # Default: 60005
 # noinspection HttpUrlsUsage
 REMOTE_HWINFO_URL = f'http://{REMOTE_HWINFO_IP}:{REMOTE_HWINFO_PORT}/json.json'
 
 FLASK_PORT = 50000  # Default: 50000
-FLASK_HOST = "localhost"  # localhost, 0.0.0.0, 127.0.0.1 Default: localhost
+FLASK_HOST = "0.0.0.0"  # Default: 0.0.0.0
 
 os.startfile('HWiNFO32.exe',
              show_cmd=False)
@@ -21,8 +22,18 @@ os.startfile('remotehwinfo.exe',
              arguments=f"-port {REMOTE_HWINFO_PORT} -log 0 -hwinfo 1 -gpuz 0 -afterburner 0",
              show_cmd=False)
 
+subprocess.run('tasklist /fi "imagename eq HWiNFO32.exe"')
+subprocess.run('tasklist /fi "imagename eq remotehwinfo.exe"')
+print()
+
 flask_app = flask.Flask(__name__)
 flask_app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+
+
+@flask_app.route('/')
+def get_json():
+    json_data = requests.get(REMOTE_HWINFO_URL, verify=False, timeout=5).json()
+    return flask.jsonify(json_data)
 
 
 @flask_app.route('/hardware')
