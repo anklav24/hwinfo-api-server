@@ -15,9 +15,14 @@ REMOTE_HWINFO_URL = f"http://{REMOTE_HWINFO_IP}:{REMOTE_HWINFO_PORT}/json.json"
 FLASK_PORT = 50000  # Default: 50000
 FLASK_HOST = "localhost"  # localhost, 0.0.0.0, 127.0.0.1 Default: localhost
 
-os.startfile("HWiNFO32.exe")
-os.startfile("remotehwinfo.exe", arguments=f"-port {REMOTE_HWINFO_PORT} -log 1 -hwinfo 1 -gpuz 0 -afterburner 0")
+os.startfile("HWiNFO32.exe",
+             show_cmd=False)
+os.startfile("remotehwinfo.exe",
+             arguments=f"-port {REMOTE_HWINFO_PORT} -log 0 -hwinfo 1 -gpuz 0 -afterburner 0",
+             show_cmd=False)
+
 flask_app = Flask(__name__)
+flask_app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 
 
 @flask_app.route("/values")
@@ -52,4 +57,9 @@ def scan_hardware():
 
 
 if __name__ == '__main__':
-    flask_app.run(host=FLASK_HOST, port=FLASK_PORT)
+    try:
+        flask_app.run(host=FLASK_HOST, port=FLASK_PORT)
+        os.system("taskkill /f /im remotehwinfo.exe")
+        os.system("taskkill /f /im HWiNFO32.exe")
+    except Exception as e:
+        print(e)
