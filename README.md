@@ -26,7 +26,8 @@
     - http://localhost:60005
     - http://localhost:60005/json.json
 - python flask server
-    - http://localhost:50000
+  - http://localhost:50000
+    - http://localhost:50000/site-map
     - http://localhost:50000/values
     - http://localhost:50000/hardware
 
@@ -44,6 +45,9 @@ enum class HwinfoReadingType
 	Other 8
 };
 ```
+
+### Troubleshooting:
+- If `remotehwinfo.exe` shows and just disappear try to change ports
 
 ### References:
 
