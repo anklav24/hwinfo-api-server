@@ -25,21 +25,6 @@
 - python flask server
   - http://localhost:50000/site-map (To get info about all methods)
 
-```
-enum class HwinfoReadingType
-{
-	None, 0
-	Temp, 1 
-	Voltage, 2 
-	Fan, 3 
-	Current, 4 
-	Power, 5 
-	Clock, 6
-	Usage, 7
-	Other 8
-};
-```
-
 ### Troubleshooting:
 - If `remotehwinfo.exe` shows and just disappear try to change ports
 
