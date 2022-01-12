@@ -40,15 +40,20 @@ def change_reading_types(json_data):
     reading_types = {'0': None, '1': 'Temp', '2': 'Voltage',
                      '3': 'Fan', '4': 'Current', '5': 'Power',
                      '6': 'Clock', '7': 'Usage', '8': 'Other'}
-    for index, value in enumerate(json_data['hwinfo']['readings']):
-        json_data['hwinfo']['readings'][index]['readingTypeName'] = reading_types[str(value['readingType'])]
+    for index, value in enumerate(json_data['readings']):
+        json_data['readings'][index]['readingTypeName'] = reading_types[str(value['readingType'])]
     return json_data
 
 
 def get_modified_json():
-    json_data = requests.get(REMOTE_HWINFO_URL, verify=False, timeout=5).json()
-    for sensor_index, hardware in enumerate(json_data['hwinfo']['sensors']):
-        json_data['hwinfo']['sensors'][sensor_index]['sensorIndex'] = sensor_index
+    json_data = requests.get(REMOTE_HWINFO_URL, verify=False, timeout=5).json()['hwinfo']
+
+    for sensor_index, hardware in enumerate(json_data['sensors']):
+        json_data['sensors'][sensor_index]['sensorIndex'] = sensor_index
+
+    for reading_index, reading in enumerate(json_data['readings']):
+        json_data['readings'][reading_index]['readingIndex'] = reading_index
+
     change_reading_types(json_data)
     return json_data
 
@@ -80,7 +85,7 @@ def get_hardware_inventory():
                    'Windows Hardware Errors (WHEA)')
     hardware_list = list()
 
-    for sensor_index, hardware in enumerate(json_data['hwinfo']['sensors']):
+    for sensor_index, hardware in enumerate(json_data['sensors']):
 
         if hardware['sensorNameUser'] not in ignore_list:
             tmp_str = f"{hardware['sensorNameUser']}\n"
@@ -90,25 +95,47 @@ def get_hardware_inventory():
     return "".join(hardware_list)
 
 
-@flask_app.route("/hardware_lld")
-def scan_hardware_lld():
-    json_data = get_modified_json()['hwinfo']
+def get_lld_sensors():
+    json_data = get_modified_json()
 
     datalist = list()
     for hardware in json_data['sensors']:
         for reading in json_data['readings']:
             if reading['sensorIndex'] == hardware['sensorIndex']:
                 datadict = {"{#SENSORNAMEUSER}": hardware['sensorNameUser'],
+                            "{#SENSORINDEX}": hardware['sensorIndex'],
                             "{#LEBALUSER}": reading['labelUser'],
+                            "{#READINGINDEX}": reading['readingIndex'],
+                            "{#READINGID}": reading['readingId'],
                             "{#READINGTYPENAME}": reading['readingTypeName'],
+                            "{#READINGTYPE}": reading['readingType'],
                             "{#VALUE}": reading['value'],
-                            "{#VALUEMIN}": reading['valueMin'],
-                            "{#VALUEMAX}": reading['valueMax'],
-                            "{#VALUEAVG}": reading['valueAvg'],
                             "{#UNIT}": reading['unit']}
                 datalist.append(datadict)
+    return datalist
 
-    return flask.jsonify(datalist)
+
+@flask_app.route("/hardware_lld")
+def scan_hardware_lld():
+    sensors = get_lld_sensors()
+    for sensor in sensors:
+        del sensor["{#VALUE}"]
+    return flask.jsonify(sensors)
+
+
+@flask_app.route("/value_lld/<int:reading_index>")
+def get_value_lld(reading_index):
+    sensors = get_lld_sensors()
+    debug = flask.request.args.get('debug', default="False", type=str)
+
+    if debug == "True":
+        for sensor in sensors:
+            if sensor["{#READINGINDEX}"] == reading_index:
+                return flask.jsonify(sensors[reading_index])
+
+    for sensor in sensors:
+        if sensor["{#READINGINDEX}"] == reading_index:
+            return flask.jsonify(sensor["{#VALUE}"])
 
 
 def has_no_empty_params(rule):
