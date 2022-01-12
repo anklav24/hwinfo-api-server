@@ -63,8 +63,10 @@ def status():
     try:
         get_modified_json()
         json = {"code": 200, "message": "all systems works"}
+    except requests.exceptions.ConnectionError as error:
+        json = {"code": 500, "message": f'{error} (try to check connection with remotehwinfo.exe)'}
     except Exception as error:
-        json = {"code": 500, "message": f'{error} (try to check connection with HWiNFO32.exe or remotehwinfo.exe)'}
+        json = {"code": 500, "message": f'{error} (try to check connection with HWiNFO32.exe)'}
 
     return flask.jsonify(json)
 
