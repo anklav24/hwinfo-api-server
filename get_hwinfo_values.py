@@ -36,15 +36,44 @@ def kill_processes():
     os.system("taskkill /f /im HWiNFO32.exe")
 
 
+def change_reading_types(json_data):
+    reading_types = {'0': None, '1': 'Temp', '2': 'Voltage',
+                     '3': 'Fan', '4': 'Current', '5': 'Power',
+                     '6': 'Clock', '7': 'Usage', '8': 'Other'}
+    for index, value in enumerate(json_data['hwinfo']['readings']):
+        json_data['hwinfo']['readings'][index]['readingType'] = reading_types[str(value['readingType'])]
+    return json_data
+
+
+def get_modified_json():
+    json_data = requests.get(REMOTE_HWINFO_URL, verify=False, timeout=5).json()
+    for sensor_index, hardware in enumerate(json_data['hwinfo']['sensors']):
+        json_data['hwinfo']['sensors'][sensor_index]['sensorIndex'] = sensor_index
+    change_reading_types(json_data)
+    return json_data
+
+
 @flask_app.route('/')
-def get_json():
-    json_data = requests.get(REMOTE_HWINFO_URL, verify=False, timeout=5).json()
-    return flask.jsonify(json_data)
+def get_all_values():
+    return flask.jsonify(get_modified_json())
 
 
-@flask_app.route('/hardware')
-def scan_hardware():
-    json_data = requests.get(REMOTE_HWINFO_URL, verify=False, timeout=5).json()
+@flask_app.route("/status")
+def status():
+    try:
+        get_modified_json()
+        json = {"code": 200, "message": "all systems works"}
+    # except requests.exceptions.ConnectionError as error:
+    #     json = {"code": 500, "message": error}
+    except Exception as error:
+        json = {"code": 500, "message": f'{error} try to check connection to remotehwinfo.exe)'}
+
+    return flask.jsonify(json)
+
+
+@flask_app.route('/hardware_inventory')
+def get_hardware_inventory():
+    json_data = get_modified_json()
 
     ignore_list = ('Memory Timings', 'RTSS',
                    'Drive: Msft Virtual Disk',
@@ -63,7 +92,7 @@ def scan_hardware():
 
 @flask_app.route('/hardware_lld')
 def scan_hardware_lld():
-    json_data = requests.get(REMOTE_HWINFO_URL, verify=False, timeout=5).json()
+    json_data = get_modified_json()
 
     datalist = list()
     for sensor_index, hardware in enumerate(json_data['hwinfo']['sensors']):
@@ -74,25 +103,12 @@ def scan_hardware_lld():
     return flask.jsonify(datalist)
 
 
-@flask_app.route("/values")
-def scan_values():
-    json_data = requests.get(REMOTE_HWINFO_URL, verify=False, timeout=5).json()
+@flask_app.route("/values_lld")
+def scan_values_lld():
+    json_data = get_modified_json()
+    readings_values = json_data['hwinfo']['readings']
 
-    datalist = list()
-    for sensor_index, hardware in enumerate(json_data['hwinfo']['sensors']):
-        json_data['hwinfo']['sensors'][sensor_index]['sensorIndex'] = sensor_index
-        for value_index, value in enumerate(json_data['hwinfo']['readings']):
-            if json_data['hwinfo']['readings'][value_index]['sensorIndex'] == sensor_index:
-                datadict = {"{#SENSORNAMEUSER}": hardware['sensorNameUser'],
-                            "{#LEBALORIGINAL}": value['labelOriginal'],
-                            "{#VALUE}": value['value'],
-                            "{#UNIT}": value['unit']}
-                datalist.append(datadict)
-
-    return flask.jsonify(datalist)
-
-
-# TODO: Add /status for zabbix checks about nodata (trigger)
+    return flask.jsonify(readings_values)
 
 
 def has_no_empty_params(rule):
@@ -109,7 +125,7 @@ def site_map():
         # and rules that require parameters
         if "GET" in rule.methods and has_no_empty_params(rule):
             url = flask.url_for(rule.endpoint, **(rule.defaults or {}))
-            links.append((f'method: {url}', f'function: {rule.endpoint}'))
+            links.append(f'{url}')
     # links is now a list of url, endpoint tuples
     return flask.jsonify(links)
 
