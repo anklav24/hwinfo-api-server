@@ -22,14 +22,8 @@
 
 ### Links
 
-- remotehwinfo
-    - http://localhost:60005
-    - http://localhost:60005/json.json
 - python flask server
-  - http://localhost:50000
-    - http://localhost:50000/site-map
-    - http://localhost:50000/values
-    - http://localhost:50000/hardware
+  - http://localhost:50000/site-map (To get info about all methods)
 
 ```
 enum class HwinfoReadingType
