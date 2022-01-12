@@ -41,7 +41,7 @@ def change_reading_types(json_data):
                      '3': 'Fan', '4': 'Current', '5': 'Power',
                      '6': 'Clock', '7': 'Usage', '8': 'Other'}
     for index, value in enumerate(json_data['hwinfo']['readings']):
-        json_data['hwinfo']['readings'][index]['readingType'] = reading_types[str(value['readingType'])]
+        json_data['hwinfo']['readings'][index]['readingTypeName'] = reading_types[str(value['readingType'])]
     return json_data
 
 
@@ -90,25 +90,25 @@ def get_hardware_inventory():
     return "".join(hardware_list)
 
 
-@flask_app.route('/hardware_lld')
+@flask_app.route("/hardware_lld")
 def scan_hardware_lld():
-    json_data = get_modified_json()
+    json_data = get_modified_json()['hwinfo']
 
     datalist = list()
-    for sensor_index, hardware in enumerate(json_data['hwinfo']['sensors']):
-        json_data['hwinfo']['sensors'][sensor_index]['sensorIndex'] = sensor_index
-        datadict = {"{#SENSORINDEX}": sensor_index, "{#SENSORNAMEUSER}": hardware['sensorNameUser']}
-        datalist.append(datadict)
+    for hardware in json_data['sensors']:
+        for reading in json_data['readings']:
+            if reading['sensorIndex'] == hardware['sensorIndex']:
+                datadict = {"{#SENSORNAMEUSER}": hardware['sensorNameUser'],
+                            "{#LEBALUSER}": reading['labelUser'],
+                            "{#READINGTYPENAME}": reading['readingTypeName'],
+                            "{#VALUE}": reading['value'],
+                            "{#VALUEMIN}": reading['valueMin'],
+                            "{#VALUEMAX}": reading['valueMax'],
+                            "{#VALUEAVG}": reading['valueAvg'],
+                            "{#UNIT}": reading['unit']}
+                datalist.append(datadict)
 
     return flask.jsonify(datalist)
-
-
-@flask_app.route("/values_lld")
-def scan_values_lld():
-    json_data = get_modified_json()
-    readings_values = json_data['hwinfo']['readings']
-
-    return flask.jsonify(readings_values)
 
 
 def has_no_empty_params(rule):
