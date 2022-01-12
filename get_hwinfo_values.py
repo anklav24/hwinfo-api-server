@@ -126,8 +126,7 @@ def site_map():
         if "GET" in rule.methods and has_no_empty_params(rule):
             url = flask.url_for(rule.endpoint, **(rule.defaults or {}))
             links.append(f'{url}')
-    # links is now a list of url, endpoint tuples
-    return flask.jsonify(links)
+    return "<br>".join(links)
 
 
 if __name__ == '__main__':
