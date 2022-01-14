@@ -108,7 +108,6 @@ def get_lld_sensors():
                             "{#SENSORINDEX}": hardware['sensorIndex'],
                             "{#LABELUSER}": reading['labelUser'],
                             "{#READINGINDEX}": reading['readingIndex'],
-                            "{#READINGID}": reading['readingId'],
                             "{#READINGTYPENAME}": reading['readingTypeName'],
                             "{#READINGTYPE}": reading['readingType'],
                             "{#VALUE}": reading['value'],
@@ -117,11 +116,78 @@ def get_lld_sensors():
     return datalist
 
 
-@flask_app.route("/hardware_lld")
+@flask_app.route("/hardware_lld", methods=['GET'])
 def scan_hardware_lld():
+    """Get json for LLD discovery
+    sensor_name_user = ''
+    sensor_index = ''
+    label_user = ''
+    reading_type_name = ''
+    reading_index = ''
+    unit = ''
+    debug = '' """
+
+    sensor_name_user = flask.request.args.get('sensor_name_user', default='', type=str)
+    sensor_index = flask.request.args.get('sensor_index', default='', type=int)
+    label_user = flask.request.args.get('label_user', default='', type=str)
+    reading_type_name = flask.request.args.get('reading_type_name', default='', type=str)
+    reading_index = flask.request.args.get('reading_index', default='', type=str)
+    unit = flask.request.args.get('unit', default='', type=str)
+    debug = flask.request.args.get('debug', default="False", type=str)
+
     sensors = get_lld_sensors()
-    for sensor in sensors:
-        del sensor["{#VALUE}"]
+
+    if debug.lower() != 'true':
+        for sensor in sensors:
+            del sensor["{#VALUE}"]
+
+    filtered_sensors = []
+    if sensor_name_user:
+        for sensor in sensors:
+            if sensor_name_user.lower() in sensor['{#SENSORNAMEUSER}'].lower():
+                filtered_sensors.append(sensor)
+        sensors = filtered_sensors
+
+    filtered_sensors = []
+    if reading_type_name:
+        for sensor in sensors:
+            if sensor['{#READINGTYPENAME}'].lower() == reading_type_name.lower():
+                filtered_sensors.append(sensor)
+        sensors = filtered_sensors
+
+    filtered_sensors = []
+    if label_user:
+        for sensor in sensors:
+            if label_user.lower()[0:4] == 'not_':
+                if label_user.lower()[4:] in sensor['{#LABELUSER}'].lower():
+                    continue
+                else:
+                    filtered_sensors.append(sensor)
+            elif label_user.lower() in sensor['{#LABELUSER}'].lower():
+                filtered_sensors.append(sensor)
+        sensors = filtered_sensors
+
+    filtered_sensors = []
+    if unit:
+        for sensor in sensors:
+            if sensor['{#UNIT}'].lower() == unit.lower():
+                filtered_sensors.append(sensor)
+            sensors = filtered_sensors
+
+    filtered_sensors = []
+    if sensor_index:
+        for sensor in sensors:
+            if sensor['{#SENSORINDEX}'] == sensor_index:
+                filtered_sensors.append(sensor)
+            sensors = filtered_sensors
+
+    filtered_sensors = []
+    if reading_index:
+        for sensor in sensors:
+            if str(sensor['{#READINGINDEX}']) in reading_index.split(','):
+                filtered_sensors.append(sensor)
+            sensors = filtered_sensors
+
     return flask.jsonify(sensors)
 
 
