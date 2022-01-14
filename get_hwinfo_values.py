@@ -37,7 +37,7 @@ def kill_processes():
 
 
 def change_reading_types(json_data):
-    reading_types = {'0': None, '1': 'Temp', '2': 'Voltage',
+    reading_types = {'0': 'None', '1': 'Temp', '2': 'Voltage',
                      '3': 'Fan', '4': 'Current', '5': 'Power',
                      '6': 'Clock', '7': 'Usage', '8': 'Other'}
     for index, value in enumerate(json_data['readings']):
