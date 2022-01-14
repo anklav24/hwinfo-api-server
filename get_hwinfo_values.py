@@ -17,6 +17,7 @@ FLASK_PORT = 50000  # Default: 50000
 flask_app = flask.Flask(__name__)
 flask_app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
 flask_app.config["JSON_SORT_KEYS"] = False
+
 # noinspection HttpUrlsUsage
 REMOTE_HWINFO_URL = f'http://{REMOTE_HWINFO_IP}:{REMOTE_HWINFO_PORT}/json.json'
 
@@ -78,6 +79,7 @@ def status():
 
 @flask_app.route('/hardware_inventory')
 def get_hardware_inventory():
+    """Get a list of hardware on the PC as a text separated by newlines"""
     json_data = get_modified_json()
 
     ignore_list = ('Memory Timings', 'RTSS',
