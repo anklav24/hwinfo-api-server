@@ -1,6 +1,9 @@
+# HWiFO API Server for Zabbix LLD
+
 ### Overview
 
 - If you want to grab some data from HWiNFO, GPU-Z, Afterburner into Zabbix (LLD, HTTP Agent, Zabbix Agent)
+- Based on RemoteHWInfo HWiNFO / GPU-Z / MSI Afterburner Remote Monitor HTTP JSON Web Server
 
 ### Installation
 
