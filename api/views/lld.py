@@ -43,43 +43,20 @@ def scan_hardware_lld():
 
     sensors = get_lld_sensors()
 
-    sensors = filter_sensors(sensor_name_user, '{#SENSORNAMEUSER}', sensors)
+    sensors = filter_str_sensors(sensor_name_user, '{#SENSORNAMEUSER}', sensors)
+    sensors = filter_str_sensors(label_user, '{#LABELUSER}', sensors)
 
     filtered_sensors = []
-    if label_user:
+    if reading_index:
         for sensor in sensors:
-            if label_user.lower()[0:4] == 'not_':
-                if label_user.lower()[4:] in sensor['{#LABELUSER}'].lower():
-                    continue
-                else:
-                    filtered_sensors.append(sensor)
-            elif label_user.lower() in sensor['{#LABELUSER}'].lower():
+            if str(sensor['{#READINGINDEX}']) in reading_index.split(','):
                 filtered_sensors.append(sensor)
-        sensors = filtered_sensors
-
-    filtered_sensors = []
-    if sensor_name_user:
-        for sensor in sensors:
-            if sensor_name_user.lower() in sensor['{#SENSORNAMEUSER}'].lower():
-                filtered_sensors.append(sensor)
-        sensors = filtered_sensors
+            sensors = filtered_sensors
 
     filtered_sensors = []
     if reading_type_name:
         for sensor in sensors:
             if sensor['{#READINGTYPENAME}'].lower() == reading_type_name.lower():
-                filtered_sensors.append(sensor)
-        sensors = filtered_sensors
-
-    filtered_sensors = []
-    if label_user:
-        for sensor in sensors:
-            if label_user.lower()[0:4] == 'not_':
-                if label_user.lower()[4:] in sensor['{#LABELUSER}'].lower():
-                    continue
-                else:
-                    filtered_sensors.append(sensor)
-            elif label_user.lower() in sensor['{#LABELUSER}'].lower():
                 filtered_sensors.append(sensor)
         sensors = filtered_sensors
 
@@ -97,31 +74,27 @@ def scan_hardware_lld():
                 filtered_sensors.append(sensor)
             sensors = filtered_sensors
 
-    filtered_sensors = []
-    if reading_index:
-        for sensor in sensors:
-            if str(sensor['{#READINGINDEX}']) in reading_index.split(','):
-                filtered_sensors.append(sensor)
-            sensors = filtered_sensors
-
     return flask.jsonify(sensors)
 
 
-def filter_sensors(filter_arg: str, sensor_value: str, sensors: list) -> list:
-    filter_arg = filter_arg.lower()
+def filter_str_sensors(filter_args: str, sensor_value: str, sensors: list):
+    filter_args = filter_args.lower().strip().replace(' ', '').split(',')
     filtered_sensors = []
 
-    if filter_arg:
-        for sensor in sensors:
-            sensor[sensor_value] = sensor[sensor_value].lower()
-            if filter_arg[0:4] == 'not_':
-                if filter_arg[4:] in sensor[sensor_value]:
-                    continue
-                else:
+    if filter_args:
+        for argument in filter_args:
+            for sensor in sensors:
+                if argument[0:4] == 'not_':
+
+                    if argument[4:] in sensor[sensor_value].lower():
+                        continue
+                    else:
+                        filtered_sensors.append(sensor)
+
+                elif argument in sensor[sensor_value].lower():
                     filtered_sensors.append(sensor)
-            elif filter_arg in sensor[sensor_value]:
-                filtered_sensors.append(sensor)
-        return filtered_sensors
+
+        return list(map(dict, set(tuple(sorted(d.items())) for d in filtered_sensors)))
     return sensors
 
 
