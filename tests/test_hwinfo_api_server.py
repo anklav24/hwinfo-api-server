@@ -1,7 +1,7 @@
 import pytest
 import requests
 
-from get_hwinfo_values import FLASK_HOST, FLASK_PORT
+from hwinfo_api_server import FLASK_HOST, FLASK_PORT
 
 if FLASK_HOST == '0.0.0.0':
     FLASK_HOST = '127.0.0.1'
@@ -51,7 +51,7 @@ def test_hardware_lld_unit():
     response = get_request('/hardware_lld?unit=rpm')
     assert response.status_code == 200
     assert len(response.json()) > 0
-    assert response.json()[2]["{#UNIT}"].lower() == 'rpm'
+    assert response.json()[0]["{#UNIT}"].lower() == 'rpm'
 
 
 def test_hardware_inventory():
