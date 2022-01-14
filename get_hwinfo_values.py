@@ -67,7 +67,7 @@ def get_all_values():
 def status():
     try:
         get_modified_json()
-        json = {"code": 200, "message": "all systems works"}
+        json = {"code": 200, "message": "All systems are working"}
     except requests.exceptions.ConnectionError as error:
         json = {"code": 500, "message": f'{error} (try to check connection with remotehwinfo.exe)'}
     except Exception as error:
