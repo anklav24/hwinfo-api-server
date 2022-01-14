@@ -2,7 +2,7 @@ import flask
 import requests
 from flask import render_template
 
-from app import app
+from api import app
 from config import REMOTE_HWINFO_IP, REMOTE_HWINFO_PORT
 
 

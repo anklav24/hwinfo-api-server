@@ -3,8 +3,8 @@ import subprocess
 
 
 def run_processes(remote_hwinfo_port: int) -> None:
-    os.startfile(r'app\third_party\HWiNFO32.exe', show_cmd=False)
-    os.startfile(r'app\third_party\remotehwinfo.exe',
+    os.startfile(r'api\third_party\HWiNFO32.exe', show_cmd=False)
+    os.startfile(r'api\third_party\remotehwinfo.exe',
                  arguments=f"-port {remote_hwinfo_port} -log 0 -hwinfo 1 -gpuz 0 -afterburner 0",
                  show_cmd=False)
     subprocess.run('tasklist /fi "imagename eq HWiNFO32.exe"')
