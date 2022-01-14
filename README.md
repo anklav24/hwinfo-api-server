@@ -27,6 +27,7 @@
 
 ### Troubleshooting:
 - If `remotehwinfo.exe` shows and just disappear try to change ports
+- run tests ` python -m pytest -v -s`
 
 ### References:
 

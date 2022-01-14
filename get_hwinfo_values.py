@@ -65,7 +65,7 @@ def get_all_values():
 
 
 @flask_app.route("/status")
-def status():
+def get_status():
     try:
         get_modified_json()
         json = {"code": 200, "message": "All systems are working"}
@@ -124,8 +124,7 @@ def scan_hardware_lld():
     label_user = ''
     reading_type_name = ''
     reading_index = ''
-    unit = ''
-    debug = '' """
+    unit = ''"""
 
     sensor_name_user = flask.request.args.get('sensor_name_user', default='', type=str)
     sensor_index = flask.request.args.get('sensor_index', default='', type=int)
@@ -133,13 +132,8 @@ def scan_hardware_lld():
     reading_type_name = flask.request.args.get('reading_type_name', default='', type=str)
     reading_index = flask.request.args.get('reading_index', default='', type=str)
     unit = flask.request.args.get('unit', default='', type=str)
-    debug = flask.request.args.get('debug', default="False", type=str)
 
     sensors = get_lld_sensors()
-
-    if debug.lower() != 'true':
-        for sensor in sensors:
-            del sensor["{#VALUE}"]
 
     filtered_sensors = []
     if sensor_name_user:
