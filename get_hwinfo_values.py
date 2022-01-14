@@ -106,7 +106,7 @@ def get_lld_sensors():
             if reading['sensorIndex'] == hardware['sensorIndex']:
                 datadict = {"{#SENSORNAMEUSER}": hardware['sensorNameUser'],
                             "{#SENSORINDEX}": hardware['sensorIndex'],
-                            "{#LEBALUSER}": reading['labelUser'],
+                            "{#LABELUSER}": reading['labelUser'],
                             "{#READINGINDEX}": reading['readingIndex'],
                             "{#READINGID}": reading['readingId'],
                             "{#READINGTYPENAME}": reading['readingTypeName'],
