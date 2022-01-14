@@ -128,9 +128,9 @@ def scan_hardware_lld():
 @flask_app.route("/value_lld/<int:reading_index>")
 def get_value_lld(reading_index):
     sensors = get_lld_sensors()
-    debug = flask.request.args.get('debug', default="False", type=str)
+    debug = flask.request.args.get('debug', default="false", type=str)
 
-    if debug == "True":
+    if debug.lower() == "true":
         for sensor in sensors:
             if sensor["{#READINGINDEX}"] == reading_index:
                 return flask.jsonify(sensors[reading_index])
