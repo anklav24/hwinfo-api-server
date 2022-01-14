@@ -1,7 +1,7 @@
 import pytest
 import requests
 
-from hwinfo_api_server import FLASK_HOST, FLASK_PORT
+from config import FLASK_HOST, FLASK_PORT
 
 if FLASK_HOST == '0.0.0.0':
     FLASK_HOST = '127.0.0.1'
