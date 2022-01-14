@@ -215,7 +215,6 @@ def get_docs():
     sorted_list = sorted(func_dict.items(), key=lambda value: len(value[0]))
     sorted_dict = dict(sorted_list)
 
-    # return dict(sorted_list)
     return flask.render_template('results.html', sorted_dict=sorted_dict)
 
 
