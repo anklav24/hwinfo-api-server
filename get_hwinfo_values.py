@@ -138,22 +138,23 @@ def get_value_lld(reading_index):
             return flask.jsonify(sensor["{#VALUE}"])
 
 
-def has_no_empty_params(rule):
-    defaults = rule.defaults if rule.defaults is not None else ()
-    arguments = rule.arguments if rule.arguments is not None else ()
-    return len(defaults) >= len(arguments)
+@flask_app.route("/docs", methods=['GET'])
+def get_docs():
+    """Print available methods. """
 
-
-@flask_app.route("/site-map")
-def site_map():
-    links = []
+    func_dict = {}
     for rule in flask_app.url_map.iter_rules():
-        # Filter out rules we can't navigate to in a browser
-        # and rules that require parameters
-        if "GET" in rule.methods and has_no_empty_params(rule):
-            url = flask.url_for(rule.endpoint, **(rule.defaults or {}))
-            links.append(f'{url}')
-    return "<br>".join(links)
+        if rule.endpoint != 'static':
+            if flask_app.view_functions[rule.endpoint].__doc__ is None:
+                func_dict[rule.rule] = ''
+            else:
+                func_dict[rule.rule] = flask_app.view_functions[rule.endpoint].__doc__
+
+    sorted_list = sorted(func_dict.items(), key=lambda value: len(value[0]))
+    sorted_dict = dict(sorted_list)
+
+    # return dict(sorted_list)
+    return flask.render_template('results.html', sorted_dict=sorted_dict)
 
 
 if __name__ == '__main__':
