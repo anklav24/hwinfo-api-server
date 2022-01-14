@@ -43,6 +43,20 @@ def scan_hardware_lld():
 
     sensors = get_lld_sensors()
 
+    sensors = filter_sensors(sensor_name_user, '{#SENSORNAMEUSER}', sensors)
+
+    filtered_sensors = []
+    if label_user:
+        for sensor in sensors:
+            if label_user.lower()[0:4] == 'not_':
+                if label_user.lower()[4:] in sensor['{#LABELUSER}'].lower():
+                    continue
+                else:
+                    filtered_sensors.append(sensor)
+            elif label_user.lower() in sensor['{#LABELUSER}'].lower():
+                filtered_sensors.append(sensor)
+        sensors = filtered_sensors
+
     filtered_sensors = []
     if sensor_name_user:
         for sensor in sensors:
@@ -91,6 +105,24 @@ def scan_hardware_lld():
             sensors = filtered_sensors
 
     return flask.jsonify(sensors)
+
+
+def filter_sensors(filter_arg: str, sensor_value: str, sensors: list) -> list:
+    filter_arg = filter_arg.lower()
+    filtered_sensors = []
+
+    if filter_arg:
+        for sensor in sensors:
+            sensor[sensor_value] = sensor[sensor_value].lower()
+            if filter_arg[0:4] == 'not_':
+                if filter_arg[4:] in sensor[sensor_value]:
+                    continue
+                else:
+                    filtered_sensors.append(sensor)
+            elif filter_arg in sensor[sensor_value]:
+                filtered_sensors.append(sensor)
+        return filtered_sensors
+    return sensors
 
 
 @app.route("/value_lld/<int:reading_index>")
