@@ -46,18 +46,20 @@ def filter_int_sensors(filter_args: str, sensor_key: str, sensors: list):
 @app.route("/hardware_lld", methods=['GET'])
 def scan_hardware_lld():
     """Get json for LLD discovery
-    hardware_name =
-    hardware_index =
-    sensor_name =
-    sensor_type_name =
-    sensor_index =
-    unit = """
+    hardware_name
+    hardware_index
+    sensor_name
+    sensor_index
+    sensor_type_name
+    sensor_type_index
+    unit"""
 
     hardware_name = flask.request.args.get('hardware_name', default='', type=str)
     hardware_index = flask.request.args.get('hardware_index', default='', type=str)
     sensor_name = flask.request.args.get('sensor_name', default='', type=str)
-    sensor_type_name = flask.request.args.get('sensor_type_name', default='', type=str)
     sensor_index = flask.request.args.get('sensor_index', default='', type=str)
+    sensor_type_name = flask.request.args.get('sensor_type_name', default='', type=str)
+    sensor_type_index = flask.request.args.get('sensor_type_index', default='', type=str)
     unit = flask.request.args.get('unit', default='', type=str)
 
     sensors = get_lld_sensors()
@@ -69,13 +71,7 @@ def scan_hardware_lld():
 
     sensors = filter_int_sensors(hardware_index, '{#HARDWAREINDEX}', sensors)
     sensors = filter_int_sensors(sensor_index, '{#SENSORINDEX}', sensors)
-
-    filtered_sensors = []
-    if unit:
-        for sensor in sensors:
-            if sensor['{#UNIT}'].lower() == unit.lower():
-                filtered_sensors.append(sensor)
-            sensors = filtered_sensors
+    sensors = filter_int_sensors(sensor_type_index, '{#SENSORTYPEINDEX}', sensors)
 
     filtered_sensors = []
     if sensor_index:
