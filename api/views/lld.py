@@ -29,7 +29,7 @@ def filter_str_sensors(filter_args: str, sensor_value: str, sensors: list):
 
 def filter_int_sensors(filter_args: str, sensor_key: str, sensors: list):
     """Filter LLD JSON with data like hardware names."""
-    filter_args = str(filter_args).lower().strip().replace(' ', '')
+    filter_args = filter_args.lower().strip().replace(' ', '')
     filtered_sensors = []
 
     if filter_args:
@@ -37,7 +37,7 @@ def filter_int_sensors(filter_args: str, sensor_key: str, sensors: list):
 
         for sensor in sensors:
             if sensor[sensor_key] in filter_args:
-                filtered_sensors.append(sensors)
+                filtered_sensors.append(sensor)
         return filtered_sensors
 
     return sensors
