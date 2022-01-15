@@ -6,7 +6,7 @@ from api.json_handler import get_lld_sensors
 
 
 def filter_str_sensors(filter_args: str, sensor_value: str, sensors: list):
-    """Filter LLD JSON"""
+    """Filter LLD JSON with data like hardware names."""
     filter_args = filter_args.lower().strip().replace(' ', '').split(',')
     filtered_sensors = []
 
@@ -23,45 +23,52 @@ def filter_str_sensors(filter_args: str, sensor_value: str, sensors: list):
                 elif argument in sensor[sensor_value].lower():
                     filtered_sensors.append(sensor)
 
-        return list(map(dict, set(tuple(sorted(d.items())) for d in filtered_sensors)))
+        return filtered_sensors
+    return sensors
+
+
+def filter_int_sensors(filter_args: str, sensor_key: str, sensors: list):
+    """Filter LLD JSON with data like hardware names."""
+    filter_args = str(filter_args).lower().strip().replace(' ', '')
+    filtered_sensors = []
+
+    if filter_args:
+        filter_args = [int(value) for value in filter_args.split(',')]
+
+        for sensor in sensors:
+            if sensor[sensor_key] in filter_args:
+                filtered_sensors.append(sensors)
+        return filtered_sensors
+
     return sensors
 
 
 @app.route("/hardware_lld", methods=['GET'])
 def scan_hardware_lld():
     """Get json for LLD discovery
-    sensor_name_user =
+    hardware_name =
+    hardware_index =
+    sensor_name =
+    sensor_type_name =
     sensor_index =
-    label_user =
-    reading_type_name =
-    reading_index =
     unit = """
 
-    sensor_name_user = flask.request.args.get('sensor_name_user', default='', type=str)
-    sensor_index = flask.request.args.get('sensor_index', default='', type=int)
-    label_user = flask.request.args.get('label_user', default='', type=str)
-    reading_type_name = flask.request.args.get('reading_type_name', default='', type=str)
-    reading_index = flask.request.args.get('reading_index', default='', type=str)
+    hardware_name = flask.request.args.get('hardware_name', default='', type=str)
+    hardware_index = flask.request.args.get('hardware_index', default='', type=str)
+    sensor_name = flask.request.args.get('sensor_name', default='', type=str)
+    sensor_type_name = flask.request.args.get('sensor_type_name', default='', type=str)
+    sensor_index = flask.request.args.get('sensor_index', default='', type=str)
     unit = flask.request.args.get('unit', default='', type=str)
 
     sensors = get_lld_sensors()
 
-    sensors = filter_str_sensors(sensor_name_user, '{#HARDWARENAME}', sensors)
-    sensors = filter_str_sensors(label_user, '{#SENSORNAME}', sensors)
+    sensors = filter_str_sensors(hardware_name, '{#HARDWARENAME}', sensors)
+    sensors = filter_str_sensors(sensor_name, '{#SENSORNAME}', sensors)
+    sensors = filter_str_sensors(sensor_type_name, '{#SENSORTYPENAME}', sensors)
+    sensors = filter_str_sensors(unit, '{#UNIT}', sensors)
 
-    filtered_sensors = []
-    if reading_index:
-        for sensor in sensors:
-            if str(sensor['{#SENSORINDEX}']) in reading_index.split(','):
-                filtered_sensors.append(sensor)
-            sensors = filtered_sensors
-
-    filtered_sensors = []
-    if reading_type_name:
-        for sensor in sensors:
-            if sensor['{#SENSORTYPENAME}'].lower() == reading_type_name.lower():
-                filtered_sensors.append(sensor)
-        sensors = filtered_sensors
+    sensors = filter_int_sensors(hardware_index, '{#HARDWAREINDEX}', sensors)
+    sensors = filter_int_sensors(sensor_index, '{#SENSORINDEX}', sensors)
 
     filtered_sensors = []
     if unit:
