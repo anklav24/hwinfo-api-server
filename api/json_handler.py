@@ -26,3 +26,23 @@ def get_modified_json():
 
     change_reading_types(json_data)
     return json_data
+
+
+def get_lld_sensors() -> list:
+    """Preprocess JSON to LLD format. Make names more user-friendly"""
+    json_data = get_modified_json()
+
+    datalist = list()
+    for hardware in json_data['sensors']:
+        for reading in json_data['readings']:
+            if reading['sensorIndex'] == hardware['sensorIndex']:
+                datadict = {"{#HARDWARENAME}": hardware['sensorNameUser'],
+                            "{#HARDWAREINDEX}": hardware['sensorIndex'],
+                            "{#SENSORNAME}": reading['labelUser'],
+                            "{#SENSORINDEX}": reading['readingIndex'],
+                            "{#SENSORTYPENAME}": reading['readingTypeName'],
+                            "{#SENSORTYPEINDEX}": reading['readingType'],
+                            "{#VALUE}": reading['value'],
+                            "{#UNIT}": reading['unit']}
+                datalist.append(datadict)
+    return datalist

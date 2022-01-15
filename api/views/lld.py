@@ -2,30 +2,11 @@
 import flask
 
 from api import app
-from api.json_handler import get_modified_json
-
-
-def get_lld_sensors() -> list:
-    """Preprocess JSON to LLD format. Make names more user-friendly"""
-    json_data = get_modified_json()
-
-    datalist = list()
-    for hardware in json_data['sensors']:
-        for reading in json_data['readings']:
-            if reading['sensorIndex'] == hardware['sensorIndex']:
-                datadict = {"{#HARDWARENAME}": hardware['sensorNameUser'],
-                            "{#HARDWAREINDEX}": hardware['sensorIndex'],
-                            "{#SENSORNAME}": reading['labelUser'],
-                            "{#SENSORINDEX}": reading['readingIndex'],
-                            "{#SENSORTYPENAME}": reading['readingTypeName'],
-                            "{#SENSORTYPEINDEX}": reading['readingType'],
-                            "{#VALUE}": reading['value'],
-                            "{#UNIT}": reading['unit']}
-                datalist.append(datadict)
-    return datalist
+from api.json_handler import get_lld_sensors
 
 
 def filter_str_sensors(filter_args: str, sensor_value: str, sensors: list):
+    """Filter LLD JSON"""
     filter_args = filter_args.lower().strip().replace(' ', '').split(',')
     filtered_sensors = []
 
