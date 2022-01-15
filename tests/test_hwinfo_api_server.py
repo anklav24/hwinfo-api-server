@@ -55,6 +55,18 @@ def test_hardware_lld_unit():
     assert response.json()[0]["{#UNIT}"].lower() == 'rpm'
 
 
+def test_hardware_lld_hardware_index():
+    args = ('', '1', '4,2,3')
+    for arg in args:
+        response = get_request(f'/hardware_lld?hardware_index={arg}')
+        assert response.status_code == 200
+        assert len(response.json()) > 0
+        if arg:
+            arg = arg.split(',')
+            assert response.json()[0]["{#HARDWAREINDEX}"] == int(min(arg))
+            assert response.json()[-1]["{#HARDWAREINDEX}"] == int(max(arg))
+
+
 def test_hardware_inventory():
     response = get_request('/hardware_inventory')
     assert response.status_code == 200
