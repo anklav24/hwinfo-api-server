@@ -83,16 +83,24 @@ def scan_hardware_lld():
     return flask.jsonify(sensors)
 
 
-@app.route("/value_lld/<int:reading_index>")
-def get_value_lld(reading_index):
+@app.route("/value_lld/<sensor_index>")
+def get_value_lld(sensor_index: str):
+    # noinspection HttpUrlsUsage
+    """Get value by sensor_index
+    sensor_index: path parameter.
+    debug: true: show the context for a value.
+
+    Examples:
+    http://127.0.0.1:50000/value_lld/189
+    http://127.0.0.1:50000/value_lld/155?debug=true
+    """
+    sensor_index = int(sensor_index)
+    debug = flask.request.args.get('debug', default="false", type=str)
+
     sensors = get_lld_sensors()
     debug = flask.request.args.get('debug', default="false", type=str)
 
     if debug.lower() == "true":
-        for sensor in sensors:
-            if sensor["{#SENSORINDEX}"] == reading_index:
-                return flask.jsonify(sensors[reading_index])
+        return flask.jsonify(sensors[sensor_index])
 
-    for sensor in sensors:
-        if sensor["{#SENSORINDEX}"] == reading_index:
-            return flask.jsonify(sensor["{#VALUE}"])
+    return flask.jsonify(sensors[sensor_index]["{#VALUE}"])
