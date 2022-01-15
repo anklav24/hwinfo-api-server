@@ -73,14 +73,10 @@ def scan_hardware_lld():
     sensors = filter_int_sensors(sensor_index, '{#SENSORINDEX}', sensors)
     sensors = filter_int_sensors(sensor_type_index, '{#SENSORTYPEINDEX}', sensors)
 
-    filtered_sensors = []
-    if sensor_index:
-        for sensor in sensors:
-            if sensor['{#HARDWAREINDEX}'] == sensor_index:
-                filtered_sensors.append(sensor)
-            sensors = filtered_sensors
+    sensors_set = [dict(s) for s in set(tuple(sensor.items()) for sensor in sensors)]
+    sensors_sorted = sorted(sensors_set, key=lambda key: (key['{#SENSORINDEX}']))
 
-    return flask.jsonify(sensors)
+    return flask.jsonify(sensors_sorted)
 
 
 @app.route("/value_lld/<sensor_index>")
