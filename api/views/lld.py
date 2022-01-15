@@ -87,8 +87,13 @@ def scan_hardware_lld():
 def get_value_lld(sensor_index: str):
     # noinspection HttpUrlsUsage
     """Get value by sensor_index
-    sensor_index: path parameter.
-    debug: true: show the context for a value.
+    sensor_index: sensor number from range 0 till end
+            Type: path parameter
+
+    debug: show the context for a value
+            Type: query
+            Options: true, false
+            Default: false
 
     Examples:
     http://127.0.0.1:50000/value_lld/189
