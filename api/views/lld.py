@@ -38,7 +38,7 @@ def filter_str_sensors(filter_args: str, sensor_key: str, sensors: list) -> list
     return sensors
 
 
-def filter_int_sensors(filter_args: str, sensor_key: str, sensors: list):
+def filter_int_sensors(filter_args: str, sensor_key: str, sensors: list) -> list[dict]:
     """Filter LLD JSON with data like hardware names."""
     filter_args = filter_args.lower().strip().replace(' ', '')
     filter_args_one = []
@@ -70,14 +70,26 @@ def filter_int_sensors(filter_args: str, sensor_key: str, sensors: list):
 
 @app.route("/hardware_lld", methods=['GET'])
 def scan_hardware_lld():
-    """Get json for LLD discovery
+    """
+Get json for LLD discovery
+
     hardware_name
     hardware_index
     sensor_name
     sensor_index
     sensor_type_name
     sensor_type_index
-    unit"""
+    unit
+
+Examples:
+
+RAM Clock http://127.0.0.1:50000/hardware_lld?hardware_name=Memory%20Timings&sensor_name=Memory%20Clock&sensor_type_name=Clock&unit=mhz
+RAM timings: http://127.0.0.1:50000/hardware_lld?hardware_name=Memory%20Timings&sensor_name=&unit=T
+All core VIDs: http://127.0.0.1:50000/hardware_lld?sensor_name=Core%20_any_%20VID
+CPU Temp: http://127.0.0.1:50000/hardware_lld?sensor_name=CPU%20(Tctl/Tdie)&sensor_type_name=Temp&unit=%C2%B0C
+CPU Temps: http://127.0.0.1:50000/hardware_lld?sensor_name=tctl,cpu,not_aver,not_gpu,not_drive,not_system,not_core,not_cache,not_pch,not_vr%20mos,not_peci,not_ccd1,not_hotspot&sensor_type_name=Temp&unit=%C2%B0C
+Motherboard Temps: http://127.0.0.1:50000/hardware_lld?hardware_name=nuvoton&sensor_name=not_cpu&sensor_type_name=temp
+"""
 
     hardware_name = flask.request.args.get('hardware_name', default='', type=str)
     hardware_index = flask.request.args.get('hardware_index', default='', type=str)
