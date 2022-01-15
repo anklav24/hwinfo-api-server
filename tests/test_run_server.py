@@ -40,8 +40,9 @@ def test_hardware_lld():
     assert response.status_code == 200
     assert len(response.json()) > 0
 
-    keys = ['{#SENSORNAMEUSER}', "{#SENSORINDEX}", "{#LABELUSER}",
-            "{#READINGINDEX}", "{#READINGTYPENAME}", "{#READINGTYPE}",
+    keys = ['{#HARDWARENAME}', "{#HARDWAREINDEX}",
+            "{#SENSORNAME}", "{#SENSORINDEX}",
+            "{#SENSORTYPENAME}", "{#SENSORTYPEINDEX}",
             "{#VALUE}", "{#UNIT}"]
     for key in keys:
         assert key in response.json()[0]

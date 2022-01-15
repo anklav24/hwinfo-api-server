@@ -12,12 +12,12 @@ def get_lld_sensors():
     for hardware in json_data['sensors']:
         for reading in json_data['readings']:
             if reading['sensorIndex'] == hardware['sensorIndex']:
-                datadict = {"{#SENSORNAMEUSER}": hardware['sensorNameUser'],
-                            "{#SENSORINDEX}": hardware['sensorIndex'],
-                            "{#LABELUSER}": reading['labelUser'],
-                            "{#READINGINDEX}": reading['readingIndex'],
-                            "{#READINGTYPENAME}": reading['readingTypeName'],
-                            "{#READINGTYPE}": reading['readingType'],
+                datadict = {"{#HARDWARENAME}": hardware['sensorNameUser'],
+                            "{#HARDWAREINDEX}": hardware['sensorIndex'],
+                            "{#SENSORNAME}": reading['labelUser'],
+                            "{#SENSORINDEX}": reading['readingIndex'],
+                            "{#SENSORTYPENAME}": reading['readingTypeName'],
+                            "{#SENSORTYPEINDEX}": reading['readingType'],
                             "{#VALUE}": reading['value'],
                             "{#UNIT}": reading['unit']}
                 datalist.append(datadict)
@@ -43,20 +43,20 @@ def scan_hardware_lld():
 
     sensors = get_lld_sensors()
 
-    sensors = filter_str_sensors(sensor_name_user, '{#SENSORNAMEUSER}', sensors)
-    sensors = filter_str_sensors(label_user, '{#LABELUSER}', sensors)
+    sensors = filter_str_sensors(sensor_name_user, '{#HARDWARENAME}', sensors)
+    sensors = filter_str_sensors(label_user, '{#SENSORNAME}', sensors)
 
     filtered_sensors = []
     if reading_index:
         for sensor in sensors:
-            if str(sensor['{#READINGINDEX}']) in reading_index.split(','):
+            if str(sensor['{#SENSORINDEX}']) in reading_index.split(','):
                 filtered_sensors.append(sensor)
             sensors = filtered_sensors
 
     filtered_sensors = []
     if reading_type_name:
         for sensor in sensors:
-            if sensor['{#READINGTYPENAME}'].lower() == reading_type_name.lower():
+            if sensor['{#SENSORTYPENAME}'].lower() == reading_type_name.lower():
                 filtered_sensors.append(sensor)
         sensors = filtered_sensors
 
@@ -70,7 +70,7 @@ def scan_hardware_lld():
     filtered_sensors = []
     if sensor_index:
         for sensor in sensors:
-            if sensor['{#SENSORINDEX}'] == sensor_index:
+            if sensor['{#HARDWAREINDEX}'] == sensor_index:
                 filtered_sensors.append(sensor)
             sensors = filtered_sensors
 
@@ -105,9 +105,9 @@ def get_value_lld(reading_index):
 
     if debug.lower() == "true":
         for sensor in sensors:
-            if sensor["{#READINGINDEX}"] == reading_index:
+            if sensor["{#SENSORINDEX}"] == reading_index:
                 return flask.jsonify(sensors[reading_index])
 
     for sensor in sensors:
-        if sensor["{#READINGINDEX}"] == reading_index:
+        if sensor["{#SENSORINDEX}"] == reading_index:
             return flask.jsonify(sensor["{#VALUE}"])
