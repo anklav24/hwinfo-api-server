@@ -31,6 +31,10 @@
 ### Troubleshooting:
 - If `remotehwinfo.exe` shows and just disappear try to change ports
 - run tests ` python -m pytest -v -s`
+- Zabbix key parameters
+```bash
+Special characters "\, ', ", `, *, ?, [, ], {, }, ~, $, !, &, ;, (, ), <, >, |, #, @, 0x0a" are not allowed in the parameters.
+```
 
 ### References:
 
