@@ -5,7 +5,8 @@ from api import app
 from api.json_handler import get_modified_json
 
 
-def get_lld_sensors():
+def get_lld_sensors() -> list:
+    """Preprocess JSON to LLD format. Make names more user-friendly"""
     json_data = get_modified_json()
 
     datalist = list()
@@ -24,15 +25,36 @@ def get_lld_sensors():
     return datalist
 
 
+def filter_str_sensors(filter_args: str, sensor_value: str, sensors: list):
+    filter_args = filter_args.lower().strip().replace(' ', '').split(',')
+    filtered_sensors = []
+
+    if filter_args:
+        for argument in filter_args:
+            for sensor in sensors:
+                if argument[0:4] == 'not_':
+
+                    if argument[4:] in sensor[sensor_value].lower():
+                        continue
+                    else:
+                        filtered_sensors.append(sensor)
+
+                elif argument in sensor[sensor_value].lower():
+                    filtered_sensors.append(sensor)
+
+        return list(map(dict, set(tuple(sorted(d.items())) for d in filtered_sensors)))
+    return sensors
+
+
 @app.route("/hardware_lld", methods=['GET'])
 def scan_hardware_lld():
     """Get json for LLD discovery
-    sensor_name_user = ''
-    sensor_index = ''
-    label_user = ''
-    reading_type_name = ''
-    reading_index = ''
-    unit = ''"""
+    sensor_name_user =
+    sensor_index =
+    label_user =
+    reading_type_name =
+    reading_index =
+    unit = """
 
     sensor_name_user = flask.request.args.get('sensor_name_user', default='', type=str)
     sensor_index = flask.request.args.get('sensor_index', default='', type=int)
@@ -75,27 +97,6 @@ def scan_hardware_lld():
             sensors = filtered_sensors
 
     return flask.jsonify(sensors)
-
-
-def filter_str_sensors(filter_args: str, sensor_value: str, sensors: list):
-    filter_args = filter_args.lower().strip().replace(' ', '').split(',')
-    filtered_sensors = []
-
-    if filter_args:
-        for argument in filter_args:
-            for sensor in sensors:
-                if argument[0:4] == 'not_':
-
-                    if argument[4:] in sensor[sensor_value].lower():
-                        continue
-                    else:
-                        filtered_sensors.append(sensor)
-
-                elif argument in sensor[sensor_value].lower():
-                    filtered_sensors.append(sensor)
-
-        return list(map(dict, set(tuple(sorted(d.items())) for d in filtered_sensors)))
-    return sensors
 
 
 @app.route("/value_lld/<int:reading_index>")
