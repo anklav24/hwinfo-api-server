@@ -30,14 +30,29 @@ def filter_str_sensors(filter_args: str, sensor_value: str, sensors: list):
 def filter_int_sensors(filter_args: str, sensor_key: str, sensors: list):
     """Filter LLD JSON with data like hardware names."""
     filter_args = filter_args.lower().strip().replace(' ', '')
+    filter_args_one = []
+    filter_args_range = []
     filtered_sensors = []
 
     if filter_args:
-        filter_args = [int(value) for value in filter_args.split(',')]
+        for arg in filter_args.split(','):
+            if '-' in arg:
+                filter_args_range.append(arg)
+            else:
+                filter_args_one.append(arg)
+
+        filter_args_one = [int(value) for value in filter_args_one]
+        filter_args_range = [[int(value) for value in arg.split('-')] for arg in filter_args_range]
 
         for sensor in sensors:
-            if sensor[sensor_key] in filter_args:
+            if sensor[sensor_key] in filter_args_one:
                 filtered_sensors.append(sensor)
+
+            for arg_range in filter_args_range:
+                for sensor_index_arg in range(arg_range[0], arg_range[-1] + 1):
+                    if sensor[sensor_key] == sensor_index_arg:
+                        filtered_sensors.append(sensor)
+
         return filtered_sensors
 
     return sensors
