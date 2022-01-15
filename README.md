@@ -1,5 +1,7 @@
 # HWiFO API Server for Zabbix LLD
 
+# TODO: self test on the run
+
 ### Overview
 
 - If you want to grab some data from HWiNFO, GPU-Z, Afterburner into Zabbix (LLD, HTTP Agent, Zabbix Agent)
