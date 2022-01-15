@@ -74,9 +74,10 @@ def test_hardware_inventory():
 
 
 def test_value_lld():
-    response = get_request('/value_lld/255')
-    assert response.status_code == 200
-    assert len(response.text)
+    for index in (1, 58, 100):
+        response = get_request(f'/value_lld/{index}')
+        assert response.status_code == 200
+        assert len(response.text)
 
 
 if __name__ == '__main__':
