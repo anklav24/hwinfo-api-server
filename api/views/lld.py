@@ -7,11 +7,11 @@ from api.json_handler import get_lld_sensors
 
 def filter_str_sensors(filter_args: str, sensor_value: str, sensors: list):
     """Filter LLD JSON with data like hardware names."""
-    filter_args = filter_args.lower().strip().replace(' ', '').split(',')
+    filter_args = filter_args.lower().strip().replace(' ', '')
     filtered_sensors = []
 
     if filter_args:
-        for argument in filter_args:
+        for argument in filter_args.split(','):
             for sensor in sensors:
                 if argument[0:4] == 'not_':
 
