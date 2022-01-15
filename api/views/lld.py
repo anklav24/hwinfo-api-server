@@ -1,29 +1,40 @@
 """For low level discovery in Zabbix"""
+import string
+
 import flask
 
 from api import app
 from api.json_handler import get_lld_sensors
 
 
-def filter_str_sensors(filter_args: str, sensor_key: str, sensors: list):
+def filter_str_sensors(filter_args: str, sensor_key: str, sensors: list) -> list[dict]:
     """Filter LLD JSON with data like hardware names."""
-    filter_args = filter_args.lower().strip().replace(' ', '')
-    filtered_sensors = []
+    filter_args = filter_args.lower()
+    filtered_sensors_usual = []
+    filtered_sensors_not = []
 
     if filter_args:
         for argument in filter_args.split(','):
             for sensor in sensors:
                 if argument[0:4] == 'not_':
-
                     if argument[4:] in sensor[sensor_key].lower():
-                        continue
+                        filtered_sensors_not.append(sensor)
                     else:
-                        filtered_sensors.append(sensor)
+                        filtered_sensors_usual.append(sensor)
+                if '_any_' in argument:
+                    for _any_ in string.printable:
+                        if argument.replace('_any_', _any_) in sensor[sensor_key].lower():
+                            filtered_sensors_usual.append(sensor)
+                if argument in sensor[sensor_key].lower():
+                    filtered_sensors_usual.append(sensor)
 
-                elif argument in sensor[sensor_key].lower():
-                    filtered_sensors.append(sensor)
+        filtered_sensors_usual = set(tuple(sensor.items()) for sensor in filtered_sensors_usual)
+        filtered_sensors_not = set(tuple(sensor.items()) for sensor in filtered_sensors_not)
 
-        return filtered_sensors
+        filtered_sensors = filtered_sensors_usual - filtered_sensors_not
+        filtered_sensors_list = [dict(sensor_set) for sensor_set in filtered_sensors]
+
+        return filtered_sensors_list
     return sensors
 
 
