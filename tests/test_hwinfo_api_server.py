@@ -6,6 +6,11 @@ from config import FLASK_HOST, FLASK_PORT
 if FLASK_HOST == '0.0.0.0':
     FLASK_HOST = '127.0.0.1'
 
+keys = ['{#HARDWARENAME}', "{#HARDWAREINDEX}",
+        "{#SENSORNAME}", "{#SENSORINDEX}",
+        "{#SENSORTYPENAME}", "{#SENSORTYPEINDEX}",
+        "{#VALUE}", "{#UNIT}"]
+
 
 # noinspection HttpUrlsUsage
 def get_request(method):
@@ -40,10 +45,6 @@ def test_hardware_lld():
     assert response.status_code == 200
     assert len(response.json()) > 0
 
-    keys = ['{#HARDWARENAME}', "{#HARDWAREINDEX}",
-            "{#SENSORNAME}", "{#SENSORINDEX}",
-            "{#SENSORTYPENAME}", "{#SENSORTYPEINDEX}",
-            "{#VALUE}", "{#UNIT}"]
     for key in keys:
         assert key in response.json()[0]
 
@@ -74,10 +75,15 @@ def test_hardware_inventory():
 
 
 def test_value_lld():
-    for index in (1, 58, 100):
-        response = get_request(f'/value_lld/{index}')
+    for query in (1, 58, 100):
+        response = get_request(f'/value_lld/{query}')
         assert response.status_code == 200
         assert len(response.text)
+
+    for query in ('3?debug=true', '4?debug=TrUe'):
+        response = get_request(f'/value_lld/{query}')
+        for key in keys:
+            assert key in response.json()
 
 
 if __name__ == '__main__':
