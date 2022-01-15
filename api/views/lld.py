@@ -54,7 +54,6 @@ def filter_int_sensors(filter_args: str, sensor_key: str, sensors: list):
                         filtered_sensors.append(sensor)
 
         return filtered_sensors
-
     return sensors
 
 
@@ -114,7 +113,6 @@ def get_value_lld(sensor_index: str):
     debug = flask.request.args.get('debug', default="false", type=str)
 
     sensors = get_lld_sensors()
-    debug = flask.request.args.get('debug', default="false", type=str)
 
     if debug.lower() == "true":
         return flask.jsonify(sensors[sensor_index])
