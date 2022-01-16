@@ -8,6 +8,7 @@ def print_waiting(sec: int) -> None:
     for _ in range(1, sec + 1):
         time.sleep(1)
         print('.', end='')
+    print()
 
 
 def run_processes(remote_hwinfo_port: int) -> None:
