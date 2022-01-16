@@ -13,7 +13,7 @@ keys = ['{#HARDWARENAME}', "{#HARDWAREINDEX}",
 
 
 # noinspection HttpUrlsUsage
-def get_request(method):
+def get_request(method: str) -> requests.get:
     response = requests.get(f'http://{FLASK_HOST}:{FLASK_PORT}{method}')
     return response
 

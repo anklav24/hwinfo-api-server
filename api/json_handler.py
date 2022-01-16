@@ -6,7 +6,7 @@ from config import REMOTE_HWINFO_IP, REMOTE_HWINFO_PORT
 REMOTE_HWINFO_URL = f'http://{REMOTE_HWINFO_IP}:{REMOTE_HWINFO_PORT}/json.json'
 
 
-def change_reading_types(json_data):
+def change_reading_types(json_data: dict) -> dict:
     reading_types = {'0': 'None', '1': 'Temp', '2': 'Voltage',
                      '3': 'Fan', '4': 'Current', '5': 'Power',
                      '6': 'Clock', '7': 'Usage', '8': 'Other'}
@@ -15,7 +15,7 @@ def change_reading_types(json_data):
     return json_data
 
 
-def get_modified_json():
+def get_modified_json() -> dict:
     json_data = requests.get(REMOTE_HWINFO_URL, verify=False, timeout=5).json()['hwinfo']
 
     for sensor_index, hardware in enumerate(json_data['sensors']):
@@ -28,7 +28,7 @@ def get_modified_json():
     return json_data
 
 
-def get_lld_sensors() -> list:
+def get_lld_sensors() -> list[dict]:
     """Preprocess JSON to LLD format. Make names more user-friendly"""
     json_data = get_modified_json()
 

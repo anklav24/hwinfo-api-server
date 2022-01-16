@@ -86,9 +86,13 @@ Examples:
 RAM Clock http://127.0.0.1:50000/hardware_lld?hardware_name=Memory%20Timings&sensor_name=Memory%20Clock&sensor_type_name=Clock&unit=mhz
 RAM timings: http://127.0.0.1:50000/hardware_lld?hardware_name=Memory%20Timings&sensor_name=&unit=T
 All core VIDs: http://127.0.0.1:50000/hardware_lld?sensor_name=Core%20_any_%20VID
-CPU Temp: http://127.0.0.1:50000/hardware_lld?sensor_name=CPU%20(Tctl/Tdie)&sensor_type_name=Temp&unit=%C2%B0C
+CPU Temp: http://127.0.0.1:50000/hardware_lld?sensor_name=CPU%20_any_Tctl&sensor_type_name=Temp&unit=%C2%B0C
 CPU Temps: http://127.0.0.1:50000/hardware_lld?sensor_name=tctl,cpu,not_aver,not_gpu,not_drive,not_system,not_core,not_cache,not_pch,not_vr%20mos,not_peci,not_ccd1,not_hotspot&sensor_type_name=Temp&unit=%C2%B0C
+GPU Temps: http://127.0.0.1:50000/hardware_lld?sensor_name=GPU&sensor_type_name=Temp&unit=%C2%B0C
 Motherboard Temps: http://127.0.0.1:50000/hardware_lld?hardware_name=nuvoton&sensor_name=not_cpu&sensor_type_name=temp
+CPU,GPU Powers http://127.0.0.1:50000/hardware_lld?sensor_name=CPU%20Package%20Power,GPU%20Power%20_any_Total,GPU%208-pin,GPU%20PCIe&sensor_type_name=Power&unit=W
+GPU Fans http://127.0.0.1:50000/hardware_lld?sensor_name=GPU&sensor_type_name=Fan&unit=RPM
+GPU Powers http://127.0.0.1:50000/hardware_lld?sensor_name=GPU%20Power%20_any_Total%2CGPU%208-pin%2CGPU%20PCIe&sensor_type_name=Power&unit=W
 """
 
     hardware_name = flask.request.args.get('hardware_name', default='', type=str)
