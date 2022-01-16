@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<zabbix_export>
+    <version>5.0</version>
+    <date>2022-01-16T21:13:39Z</date>
+    <groups>
+        <group>
+            <name>Templates/Operating systems</name>
+        </group>
+    </groups>
+    <templates>
+        <template>
+            <template>Template HWiNFO API Server</template>
+            <name>Template HWiNFO API Server</name>
+            <groups>
+                <group>
+                    <name>Templates/Operating systems</name>
+                </group>
+            </groups>
+            <applications>
+                <application>
+                    <name>HWiNFO</name>
+                </application>
+            </applications>
+            <items>
+                <item>
+                    <name>hwinfo.hardware.inventory</name>
+                    <key>hwinfo.hardware.inventory[{$HWINFO_PORT}]</key>
+                    <delay>1d</delay>
+                    <trends>0</trends>
+                    <value_type>TEXT</value_type>
+                    <inventory_link>HARDWARE_FULL</inventory_link>
+                    <applications>
+                        <application>
+                            <name>HWiNFO</name>
+                        </application>
+                    </applications>
+                    <preprocessing>
+                        <step>
+                            <type>NOT_MATCHES_REGEX</type>
+                            <params>500 Internal Server Error</params>
+                            <error_handler>DISCARD_VALUE</error_handler>
+                        </step>
+                        <step>
+                            <type>MATCHES_REGEX</type>
+                            <params>^(?!\s*$).+</params>
+                            <error_handler>DISCARD_VALUE</error_handler>
+                        </step>
+                        <step>
+                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                            <params>30d</params>
+                        </step>
+                    </preprocessing>
+                    <triggers>
+                        <trigger>
+                            <expression>{diff()}=1</expression>
+                            <name>HWiNFO: Hardware has changed</name>
+                            <priority>WARNING</priority>
+                            <manual_close>YES</manual_close>
+                        </trigger>
+                    </triggers>
+                </item>
+                <item>
+                    <name>hwinfo.status</name>
+                    <key>hwinfo.status[{$HWINFO_PORT}]</key>
+                    <delay>10s</delay>
+                    <applications>
+                        <application>
+                            <name>HWiNFO</name>
+                        </application>
+                    </applications>
+                    <preprocessing>
+                        <step>
+                            <type>JSONPATH</type>
+                            <params>$.code</params>
+                        </step>
+                        <step>
+                            <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                            <params>1m</params>
+                        </step>
+                    </preprocessing>
+                </item>
+            </items>
+            <discovery_rules>
+                <discovery_rule>
+                    <name>Motherboard Temps Discovery</name>
+                    <key>hwinfo.hardware.lld[{$HWINFO_PORT}, hardware_name={$MOTHERBOARD_MODEL}, sensor_name=not_cpu, sensor_type_name=temp, unit=°C]</key>
+                    <delay>1h</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>{#SENSORTYPENAME} {#SENSORNAME}</name>
+                            <key>hwinfo.value.lld[{$HWINFO_PORT}, {#SENSORINDEX}, motherboard_temps]</key>
+                            <delay>10s</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>!{#UNIT}</units>
+                            <description>{#HARDWARENAME}</description>
+                            <applications>
+                                <application>
+                                    <name>HWiNFO</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>NOT_MATCHES_REGEX</type>
+                                    <params>500 Internal Server Error</params>
+                                    <error_handler>DISCARD_VALUE</error_handler>
+                                </step>
+                                <step>
+                                    <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                                    <params>30s</params>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>Motherboard Voltages Discovery</name>
+                    <key>hwinfo.hardware.lld[{$HWINFO_PORT}, hardware_name={$MOTHERBOARD_MODEL}, sensor_type_name=Voltage, unit=V]</key>
+                    <delay>1h</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>{#SENSORTYPENAME} {#SENSORNAME}</name>
+                            <key>hwinfo.value.lld[{$HWINFO_PORT}, {#SENSORINDEX}, motherboard_voltages]</key>
+                            <delay>10s</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>!{#UNIT}</units>
+                            <description>{#HARDWARENAME}</description>
+                            <applications>
+                                <application>
+                                    <name>HWiNFO</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>NOT_MATCHES_REGEX</type>
+                                    <params>500 Internal Server Error</params>
+                                </step>
+                                <step>
+                                    <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                                    <params>30s</params>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>CPU Power Discovery</name>
+                    <key>hwinfo.hardware.lld[{$HWINFO_PORT}, sensor_name=CPU%20Package%20Power, sensor_type_name=Power, unit=W]</key>
+                    <delay>1h</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>{#SENSORNAME}</name>
+                            <key>hwinfo.value.lld[{$HWINFO_PORT}, {#SENSORINDEX}, cpu_power]</key>
+                            <delay>10s</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>!{#UNIT}</units>
+                            <description>Hardware name: {#HARDWARENAME}&#13;
+Sensor type: {#SENSORTYPENAME}</description>
+                            <applications>
+                                <application>
+                                    <name>HWiNFO</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>NOT_MATCHES_REGEX</type>
+                                    <params>500 Internal Server Error</params>
+                                    <error_handler>DISCARD_VALUE</error_handler>
+                                </step>
+                                <step>
+                                    <type>JAVASCRIPT</type>
+                                    <params>return Math.round(value * 1000) / 1000</params>
+                                </step>
+                                <step>
+                                    <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                                    <params>30s</params>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>CPU Temp Discovery</name>
+                    <key>hwinfo.hardware.lld[{$HWINFO_PORT}, sensor_name=CPU%20_any_Tctl, sensor_type_name=Temp, unit=°C]</key>
+                    <delay>1h</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>{#SENSORTYPENAME} {#SENSORNAME}</name>
+                            <key>hwinfo.value.lld[{$HWINFO_PORT}, {#SENSORINDEX}, cpu_temp]</key>
+                            <delay>10s</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>!{#UNIT}</units>
+                            <description>{#HARDWARENAME}</description>
+                            <applications>
+                                <application>
+                                    <name>HWiNFO</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>NOT_MATCHES_REGEX</type>
+                                    <params>500 Internal Server Error</params>
+                                    <error_handler>DISCARD_VALUE</error_handler>
+                                </step>
+                                <step>
+                                    <type>JAVASCRIPT</type>
+                                    <params>return Math.round(value * 10) / 10</params>
+                                </step>
+                                <step>
+                                    <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                                    <params>30s</params>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>GPU Powers Discovery</name>
+                    <key>hwinfo.hardware.lld[{$HWINFO_PORT}, sensor_name=GPU%20Power%20_any_Total%2CGPU%208-pin%2CGPU%20PCIe, sensor_type_name=Power, unit=W]</key>
+                    <delay>1h</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>{#HARDWARENAME} {{#SENSORNAME}.regsub(&quot; .*&quot;, \0)}</name>
+                            <key>hwinfo.value.lld[{$HWINFO_PORT}, {#SENSORINDEX}, gpu_power]</key>
+                            <delay>10s</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>!{#UNIT}</units>
+                            <description>Sensor name: {#SENSORNAME}&#13;
+Sensor type: {#SENSORTYPENAME}</description>
+                            <applications>
+                                <application>
+                                    <name>HWiNFO</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>NOT_MATCHES_REGEX</type>
+                                    <params>500 Internal Server Error</params>
+                                </step>
+                                <step>
+                                    <type>JAVASCRIPT</type>
+                                    <params>return Math.round(value * 1000) / 1000</params>
+                                </step>
+                                <step>
+                                    <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                                    <params>30s</params>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>GPU Fans Discovery</name>
+                    <key>hwinfo.hardware.lld[{$HWINFO_PORT}, sensor_name=GPU, sensor_type_name=Fan, unit=RPM]</key>
+                    <delay>1h</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>{#HARDWARENAME} {{#SENSORNAME}.regsub(&quot; .*&quot;, \0)}</name>
+                            <key>hwinfo.value.lld[{$HWINFO_PORT}, {#SENSORINDEX}, gpu_fan]</key>
+                            <delay>10s</delay>
+                            <units>!{#UNIT}</units>
+                            <description>Sensor name: {#SENSORNAME}&#13;
+Sensor type: {#SENSORTYPENAME}</description>
+                            <applications>
+                                <application>
+                                    <name>HWiNFO</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>NOT_MATCHES_REGEX</type>
+                                    <params>500 Internal Server Error</params>
+                                    <error_handler>DISCARD_VALUE</error_handler>
+                                </step>
+                                <step>
+                                    <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                                    <params>30s</params>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>GPU Temps Discovery</name>
+                    <key>hwinfo.hardware.lld[{$HWINFO_PORT}, sensor_name=GPU, sensor_type_name=Temp, unit=°C]</key>
+                    <delay>1h</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>{#HARDWARENAME} {{#SENSORNAME}.regsub(&quot; .*&quot;, \0)}</name>
+                            <key>hwinfo.value.lld[{$HWINFO_PORT}, {#SENSORINDEX}, gpu_temp]</key>
+                            <delay>10s</delay>
+                            <value_type>FLOAT</value_type>
+                            <units>!{#UNIT}</units>
+                            <description>Sensor name: {#SENSORNAME}&#13;
+Sensor type: {#SENSORTYPENAME}</description>
+                            <applications>
+                                <application>
+                                    <name>HWiNFO</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>NOT_MATCHES_REGEX</type>
+                                    <params>500 Internal Server Error</params>
+                                    <error_handler>DISCARD_VALUE</error_handler>
+                                </step>
+                                <step>
+                                    <type>JAVASCRIPT</type>
+                                    <params>return Math.round(value * 10) / 10</params>
+                                </step>
+                                <step>
+                                    <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                                    <params>30s</params>
+                                </step>
+                            </preprocessing>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+                <discovery_rule>
+                    <name>System Fans Discovery</name>
+                    <key>hwinfo.hardware.lld[{$HWINFO_PORT}, sensor_name=not_gpu, sensor_type_name=fan, unit=rpm]</key>
+                    <delay>1h</delay>
+                    <item_prototypes>
+                        <item_prototype>
+                            <name>{#SENSORTYPENAME} {#SENSORNAME}</name>
+                            <key>hwinfo.value.lld[{$HWINFO_PORT}, {#SENSORINDEX}, system_fan]</key>
+                            <delay>10s</delay>
+                            <units>!{#UNIT}</units>
+                            <description>{#HARDWARENAME}</description>
+                            <applications>
+                                <application>
+                                    <name>HWiNFO</name>
+                                </application>
+                            </applications>
+                            <preprocessing>
+                                <step>
+                                    <type>NOT_MATCHES_REGEX</type>
+                                    <params>500 Internal Server Error</params>
+                                    <error_handler>DISCARD_VALUE</error_handler>
+                                </step>
+                                <step>
+                                    <type>DISCARD_UNCHANGED_HEARTBEAT</type>
+                                    <params>30s</params>
+                                </step>
+                            </preprocessing>
+                            <trigger_prototypes>
+                                <trigger_prototype>
+                                    <expression>{max(1m)}&lt;{$MIN_FAN_SPEED:&quot;{#SENSORTYPENAME} {#SENSORNAME}&quot;}</expression>
+                                    <name>HWiNFO: {#SENSORTYPENAME} {#SENSORNAME} &lt; {$MIN_FAN_SPEED:&quot;{#SENSORTYPENAME} {#SENSORNAME}&quot;} RPM</name>
+                                    <priority>WARNING</priority>
+                                    <description>{#HARDWARENAME}</description>
+                                    <manual_close>YES</manual_close>
+                                </trigger_prototype>
+                                <trigger_prototype>
+                                    <expression>{min(1m)}&gt;{$MAX_FAN_SPEED:&quot;{#SENSORTYPENAME} {#SENSORNAME}&quot;}</expression>
+                                    <name>HWiNFO: {#SENSORTYPENAME} {#SENSORNAME} &gt; {$MAX_FAN_SPEED:&quot;{#SENSORTYPENAME} {#SENSORNAME}&quot;} RPM</name>
+                                    <priority>WARNING</priority>
+                                    <description>{#HARDWARENAME}</description>
+                                    <manual_close>YES</manual_close>
+                                </trigger_prototype>
+                            </trigger_prototypes>
+                        </item_prototype>
+                    </item_prototypes>
+                </discovery_rule>
+            </discovery_rules>
+            <tags>
+                <tag>
+                    <tag>Custom</tag>
+                </tag>
+            </tags>
+            <macros>
+                <macro>
+                    <macro>{$HWINFO_PORT}</macro>
+                    <value>50000</value>
+                    <description>Server API Port</description>
+                </macro>
+                <macro>
+                    <macro>{$MAX_FAN_SPEED}</macro>
+                    <value>1100</value>
+                    <description>RPM, Example: {$MAX_FAN_SPEED:&quot;Fan System 1&quot;}</description>
+                </macro>
+                <macro>
+                    <macro>{$MIN_FAN_SPEED}</macro>
+                    <value>700</value>
+                    <description>RPM, Example: {$MIN_FAN_SPEED:&quot;Fan System 1&quot;}</description>
+                </macro>
+                <macro>
+                    <macro>{$MOTHERBOARD_MODEL}</macro>
+                    <value>MSI%20B450-A%20PRO%20MAX</value>
+                    <description>HWiFO Motherboad name. All spaces replace on %20. Example: MSI%20B450-A%20PRO%20MAX</description>
+                </macro>
+            </macros>
+        </template>
+    </templates>
+</zabbix_export>
