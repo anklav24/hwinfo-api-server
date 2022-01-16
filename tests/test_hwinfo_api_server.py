@@ -49,11 +49,16 @@ def test_hardware_lld():
         assert key in response.json()[0]
 
 
-def test_hardware_lld_unit():
-    response = get_request('/hardware_lld?unit=rpm')
-    assert response.status_code == 200
-    assert len(response.json()) > 0
-    assert response.json()[0]["{#UNIT}"].lower() == 'rpm'
+def test_hardware_lld_hardware_name():
+    args = ('', 'CPU', 'NOT_CPU', 'cpu _any_', 'cpu,system')
+    for arg in args:
+        if arg:
+            response = get_request(f'/hardware_lld?hardware_name={arg}')
+            assert response.status_code == 200
+            assert len(response.json()) > 0
+            if arg == 'cpu,system':
+                assert 'system' in response.json()[0]["{#HARDWARENAME}"].lower()
+                assert 'cpu' in response.json()[-1]["{#HARDWARENAME}"].lower()
 
 
 def test_hardware_lld_hardware_index():
@@ -66,6 +71,65 @@ def test_hardware_lld_hardware_index():
             arg = arg.split(',')
             assert response.json()[0]["{#HARDWAREINDEX}"] == int(min(arg))
             assert response.json()[-1]["{#HARDWAREINDEX}"] == int(max(arg))
+
+
+def test_hardware_lld_sensor_name():
+    args = ('', 'memory', 'not_cpu', 'not_gpu', 'core _any_')
+    for arg in args:
+        if arg:
+            response = get_request(f'/hardware_lld?sensor_name={arg}')
+            assert response.status_code == 200
+            assert len(response.json()) > 0
+            if arg[:4] == 'not_':
+                for sensor in response.json():
+                    assert arg[4:] not in sensor['{#SENSORNAME}'].lower()
+            else:
+                arg = arg.replace('_any_', '')
+                for sensor in response.json():
+                    assert arg in sensor['{#SENSORNAME}'].lower()
+
+
+def test_hardware_lld_sensor_index():
+    args = ('', '1', '4,2,3')
+    for arg in args:
+        response = get_request(f'/hardware_lld?sensor_index={arg}')
+        assert response.status_code == 200
+        assert len(response.json()) > 0
+        if arg:
+            arg = arg.split(',')
+            assert response.json()[0]["{#SENSORINDEX}"] == int(min(arg))
+            assert response.json()[-1]["{#SENSORINDEX}"] == int(max(arg))
+
+
+def test_hardware_lld_sensor_type_name():
+    args = ('fan', 'temp', 'other')
+    for arg in args:
+        response = get_request(f'/hardware_lld?sensor_type_name={arg}')
+        assert response.status_code == 200
+        assert len(response.json()) > 0
+
+
+def test_hardware_lld_sensor_type_index():
+    for arg in range(1, 9):
+        response = get_request(f'/hardware_lld?sensor_type_index={arg}')
+        assert response.status_code == 200
+        assert len(response.json()) > 0
+
+
+def test_hardware_lld_unit():
+    args = ('rpm', 'mb', 'w', 'V', 'not_mb')
+
+    for arg in args:
+        if arg:
+            response = get_request(f'/hardware_lld?unit={arg}')
+            assert response.status_code == 200
+            assert len(response.json()) > 0
+            if arg[:4] == 'not_':
+                for sensor in response.json():
+                    assert arg[4:].lower() not in sensor['{#UNIT}'].lower()
+            else:
+                for sensor in response.json():
+                    assert arg.lower() in sensor['{#UNIT}'].lower()
 
 
 def test_hardware_inventory():
