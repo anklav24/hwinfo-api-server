@@ -6,15 +6,9 @@ from api import app
 from api.json_handler import get_modified_json
 
 
-@app.route('/')
-def get_all_values():
-    """Return preprocessed JSON from RemoteHWInfo."""
-    return flask.jsonify(get_modified_json())
-
-
-@app.route("/docs", methods=['GET'])
+@app.route("/", methods=['GET'])
 def get_docs():
-    """Print available methods."""
+    """Print documentation."""
     func_dict = {}
     for rule in app.url_map.iter_rules():
         if rule.endpoint != 'static':
@@ -27,6 +21,12 @@ def get_docs():
     sorted_dict = dict(sorted_list)
 
     return render_template('results.html', sorted_dict=sorted_dict)
+
+
+@app.route('/json')
+def get_all_values():
+    """Return preprocessed JSON from RemoteHWInfo."""
+    return flask.jsonify(get_modified_json())
 
 
 @app.route("/status")

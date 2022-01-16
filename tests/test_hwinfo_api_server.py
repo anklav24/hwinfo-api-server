@@ -18,20 +18,20 @@ def get_request(method: str) -> requests.get:
     return response
 
 
-def test_root():
-    response = get_request('/')
-    assert response.status_code == 200
-    assert len(response.json()['sensors']) > 0
-    assert len(response.json()['readings']) > 0
-
-
 def test_docs():
-    response = get_request('/docs')
+    response = get_request('/')
     assert response.status_code == 200
 
     words = ['table', 'Method', 'Description']
     for word in words:
         assert word in response.text
+
+
+def test_json():
+    response = get_request('/json')
+    assert response.status_code == 200
+    assert len(response.json()['sensors']) > 0
+    assert len(response.json()['readings']) > 0
 
 
 def test_status():
