@@ -2,6 +2,7 @@
 
 # TODO: self test on the run
 # TODO: add args for .exe
+# TODO: add debug for develop environment
 
 ### Overview
 

@@ -16,5 +16,7 @@ DEVELOPMENT = False  # True, False
 DEBUG = False  # True, False
 TESTING = False  # True, False
 
+DEVELOP_ENV = True  # Select the serve or flask server
+
 # Third-party loggers
 logging.getLogger('werkzeug').setLevel(logging.DEBUG)
