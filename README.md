@@ -1,6 +1,7 @@
 # HWiFO API Server for Zabbix LLD
 
 # TODO: self test on the run
+# TODO: add args for .exe
 
 ### Overview
 
