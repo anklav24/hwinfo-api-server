@@ -31,6 +31,7 @@
   - http://localhost:50000/site-map (To get info about all methods)
 
 ### Troubleshooting:
+- In zabbix keys replace `space -> %20` `comma -> %2C`
 - If `remotehwinfo.exe` shows and just disappear try to change ports
 - run tests ` python -m pytest -v -s`
 - Zabbix key parameters
