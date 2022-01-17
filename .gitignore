@@ -273,3 +273,5 @@ paket-files/
 __pycache__/
 *.pyc
 !/Zabbix Agent/hwinfo_api_server/
+!/Zabbix Agent/hwinfo_api_server.zip
+/Zabbix Agent/hwinfo_api_server.zip
