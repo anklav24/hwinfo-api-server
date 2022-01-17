@@ -52,6 +52,8 @@ Zabbix Agent/
 
 ### Troubleshooting:
 
+- Check firewall if you can not access from LAN
+- Check tests if you can not get results from API
 - If `remotehwinfo.exe` shows and just disappear try to change ports
 - run tests ` python -m pytest -v -s`
 - Check `Zabbix Agent/zabbix_agentd.log`
