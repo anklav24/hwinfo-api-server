@@ -1,9 +1,13 @@
+taskkill /f /im remotehwinfo.exe
+taskkill /f /im HWiNFO32.exe
+
 rm -Recurse -Force .\dist\
 rm -Recurse -Force .\build\
 
 pyinstaller.exe --onefile hwinfo_api_server.py --add-data "api/templates;api/templates" --add-data "api/static;api/static" --add-data "api/third_party;api/third_party"
 xcopy  api\third_party\* dist\api\third_party\* /E/Y
 xcopy  zabbix_agentd.conf.d\* dist\zabbix_agentd.conf.d\* /E/Y
+xcopy  tests\* dist\tests\* /E/Y
 cp .\README.md .\dist\
 
 rm -Recurse -Force .\build\
