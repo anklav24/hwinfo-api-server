@@ -89,5 +89,6 @@ Special characters "\, ', ", `, *, ?, [, ], {, }, ~, $, !, &, ;, (, ), <, >, |, 
 
 - add args for .exe
     - debug
-    - ports
+    - ports hw and remote hw
 - add my contacts in the code
+- add discovery rools for notebook (battery, cpu etc..)
