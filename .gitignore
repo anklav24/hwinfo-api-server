@@ -4,6 +4,7 @@ log.txt
 venv/
 *.spec
 
+hwinfo_api_server/
 instance/
 
 .pytest_cache/
@@ -271,3 +272,6 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+!/Zabbix Agent/hwinfo_api_server/
+!/Zabbix Agent/hwinfo_api_server.zip
+/Zabbix Agent/hwinfo_api_server.zip
