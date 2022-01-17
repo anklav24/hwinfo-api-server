@@ -71,28 +71,43 @@ def filter_int_sensors(filter_args: str, sensor_key: str, sensors: list) -> list
 @app.route("/hardware_lld", methods=['GET'])
 def scan_hardware_lld():
     """
-Get json for LLD discovery
+Get json for LLD discovery and filter with queries.
+    All type: query
+    All Default: ''
 
-    hardware_name
-    hardware_index
-    sensor_name
-    sensor_index
-    sensor_type_name
-    sensor_type_index
-    unit
+    hardware_name:
+            Options: GPU, CPU, NOT_GPU, System, etc...
+
+    hardware_index:
+            Options: Singe value: 1; Array: 0,1,2,6,10; Range: 1-10, Ranges: 1-3,5-8 etc...
+
+    sensor_name:
+            Options: core _any_ vid, Used, not_gpu etc...
+
+    sensor_index:
+            Options: See hardware_index
+
+    sensor_type_name:
+            Options: None, Temp, Voltage, Fan, Current, Power, Clock, Usage, Other
+
+    sensor_type_index:
+            Options: See hardware_index
+
+    unit:
+            Options: '',°C, RPM, MB,  NOT_MB, GB, KB/s, MB/s, GT/s, , %, x, T, Yes/No, Gbps etc...
 
 Examples:
 
-RAM Clock http://127.0.0.1:50000/hardware_lld?hardware_name=Memory%20Timings&sensor_name=Memory%20Clock&sensor_type_name=Clock&unit=mhz
-RAM timings: http://127.0.0.1:50000/hardware_lld?hardware_name=Memory%20Timings&sensor_name=&unit=T
-All core VIDs: http://127.0.0.1:50000/hardware_lld?sensor_name=Core%20_any_%20VID
-CPU Temp: http://127.0.0.1:50000/hardware_lld?sensor_name=CPU%20_any_Tctl&sensor_type_name=Temp&unit=%C2%B0C
-CPU Temps: http://127.0.0.1:50000/hardware_lld?sensor_name=tctl,cpu,not_aver,not_gpu,not_drive,not_system,not_core,not_cache,not_pch,not_vr%20mos,not_peci,not_ccd1,not_hotspot&sensor_type_name=Temp&unit=%C2%B0C
-GPU Temps: http://127.0.0.1:50000/hardware_lld?sensor_name=GPU&sensor_type_name=Temp&unit=%C2%B0C
-Motherboard Temps: http://127.0.0.1:50000/hardware_lld?hardware_name=nuvoton&sensor_name=not_cpu&sensor_type_name=temp
-CPU,GPU Powers http://127.0.0.1:50000/hardware_lld?sensor_name=CPU%20Package%20Power,GPU%20Power%20_any_Total,GPU%208-pin,GPU%20PCIe&sensor_type_name=Power&unit=W
-GPU Fans http://127.0.0.1:50000/hardware_lld?sensor_name=GPU&sensor_type_name=Fan&unit=RPM
-GPU Powers http://127.0.0.1:50000/hardware_lld?sensor_name=GPU%20Power%20_any_Total%2CGPU%208-pin%2CGPU%20PCIe&sensor_type_name=Power&unit=W
+RAM Clock:\t http://127.0.0.1:50000/hardware_lld?hardware_name=Memory%20Timings&sensor_name=Memory%20Clock&sensor_type_name=Clock&unit=mhz
+RAM timings:\t http://127.0.0.1:50000/hardware_lld?hardware_name=Memory%20Timings&sensor_name=&unit=T
+All core VIDs:\t http://127.0.0.1:50000/hardware_lld?sensor_name=Core%20_any_%20VID
+CPU Temp:\t http://127.0.0.1:50000/hardware_lld?sensor_name=CPU%20_any_Tctl&sensor_type_name=Temp&unit=%C2%B0C
+CPU Temps:\t http://127.0.0.1:50000/hardware_lld?sensor_name=tctl,cpu,not_aver,not_gpu,not_drive,not_system,not_core,not_cache,not_pch,not_vr%20mos,not_peci,not_ccd1,not_hotspot&sensor_type_name=Temp&unit=%C2%B0C
+GPU Temps:\t http://127.0.0.1:50000/hardware_lld?sensor_name=GPU&sensor_type_name=Temp&unit=%C2%B0C
+Motherboard Temps:\t http://127.0.0.1:50000/hardware_lld?hardware_name=nuvoton&sensor_name=not_cpu&sensor_type_name=temp
+CPU,GPU Powers:\t http://127.0.0.1:50000/hardware_lld?sensor_name=CPU%20Package%20Power,GPU%20Power%20_any_Total,GPU%208-pin,GPU%20PCIe&sensor_type_name=Power&unit=W
+GPU Fans:\t http://127.0.0.1:50000/hardware_lld?sensor_name=GPU&sensor_type_name=Fan&unit=RPM
+GPU Powers:\t http://127.0.0.1:50000/hardware_lld?sensor_name=GPU%20Power%20_any_Total%2CGPU%208-pin%2CGPU%20PCIe&sensor_type_name=Power&unit=W
 """
 
     hardware_name = flask.request.args.get('hardware_name', default='', type=str)

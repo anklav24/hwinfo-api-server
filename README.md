@@ -1,19 +1,16 @@
 # HWiFO API Server for Zabbix LLD
 
-### TODO:
+## Overview
 
-- add args for .exe
-    - debug
-    - ports
+### You need this if you want to grab certain data from HWiNFO
 
-### Overview
-
-- If you want to grab some data from HWiNFO (GPU-Z and Afterburner are possible in future) into Zabbix (Zabbix Agent,
-  HTTP Agent)
-- There is a Zabbix temple (LLD, Zabbix agent)
+- Apply filters
+- Get data into Zabbix (Zabbix Agent, HTTP Agent)
+- Use Zabbix template (LLD, Zabbix agent)
 - Based on RemoteHWInfo HWiNFO / GPU-Z / MSI Afterburner Remote Monitor HTTP JSON Web Server
+- _* GPU-Z and Afterburner data are possible in future_
 
-### Requirements
+## Requirements
 
 - Windows 10 or above
 - Zabbix server 5.x LTS
@@ -38,10 +35,14 @@
 ### Links
 
 - http://localhost:50000  # Show you documentation.
+  <details>
+    <summary>Screenshot</summary>
+      ![](docs/docs_screenshot.png)
+  </details>
+
 - [Postman with examples](https://www.postman.com/martian-trinity-608894/workspace/postman-examples-public/request/14292201-2ee88739-c654-47c0-99f3-e738500304a8)
 
 ## Other
-
 
 ### Troubleshooting:
 
@@ -73,3 +74,9 @@ Special characters "\, ', ", `, *, ?, [, ], {, }, ~, $, !, &, ;, (, ), <, >, |, 
 - [Demion / remotehwinfo](https://github.com/Demion/remotehwinfo)
 - [Remote Sensor Monitor - A RESTful Web Server](https://www.hwinfo.com/forum/threads/introducing-remote-sensor-monitor-a-restful-web-server.1025/)
 - [HWiNFO - Professional System Information and Diagnostics](https://www.hwinfo.com/)
+
+### TODO:
+
+- add args for .exe
+    - debug
+    - ports
