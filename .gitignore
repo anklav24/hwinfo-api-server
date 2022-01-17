@@ -4,6 +4,7 @@ log.txt
 venv/
 *.spec
 
+hwinfo_api_server/
 instance/
 
 .pytest_cache/
