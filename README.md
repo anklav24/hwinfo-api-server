@@ -36,7 +36,7 @@
 
 - [Postman with examples](https://www.postman.com/martian-trinity-608894/workspace/postman-examples-public/request/14292201-2ee88739-c654-47c0-99f3-e738500304a8)
 - [Get docs: http://localhost:50000](http://localhost:50000)
-  ![](docs/docs_screenshot.png)
+  ![](docs/docs.png)
 - ![](docs/zabbix_discovery.png)
 
 ## Other
