@@ -17,24 +17,24 @@
 
 ## Installation
 
-### Run HWiNFO API server
-
-- [Download Latest Release](https://github.com/anklav24/remotehwinfo-zabbix-integration/releases/latest/download/hwinfo_api_server.zip)
-- Rus as administrator: `.hwinfo_api_server.exe`
-
 ### Configure Zabbix-host
 
-- Copy `hwinfo_api_server` folder to `user_scripts/hwinfo_api_server/Zabbix Agent`
-- Move `hwinfo_api_server/zabbix_agentd.conf.d` to `Zabbix Agent` folder.
-- Restart `Zabbix Agent` service.
+- [Download Latest Release](https://github.com/anklav24/remotehwinfo-zabbix-integration/releases/latest/download/hwinfo_api_server.zip)
+- Unzip and copy all files to `Zabbix Agent` folder.
 - Run as administrator `task_scheduler/import_autostart.cmd`
+- Restart `Zabbix Agent` service.
 
 ```
-Zabbix Agent
+Zabbix Agent/
+├── task_scheduler
 ├── user_scripts
-│   └── hwinfo_api_server
+├── user_templates
 └── zabbix_agentd.conf.d
 ```
+
+### Run HWiNFO API server
+
+- Run as administrator: `user_scripts/hwinfo_api_server/hwinfo_api_server.exe`
 
 ### Configure Zabbix-server
 
