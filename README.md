@@ -24,14 +24,14 @@
 
 ### Configure Zabbix-host
 
-- Copy `hwinfo_api_server` folder to `user scripts/hwinfo_api_server/Zabbix Agent`
+- Copy `hwinfo_api_server` folder to `user_scripts/hwinfo_api_server/Zabbix Agent`
 - Move `hwinfo_api_server/zabbix_agentd.conf.d` to `Zabbix Agent` folder.
 - Restart `Zabbix Agent` service.
 - Run as administrator `task_scheduler/import_autostart.cmd`
 
 ```
 Zabbix Agent
-├── user scripts
+├── user_scripts
 │   └── hwinfo_api_server
 └── zabbix_agentd.conf.d
 ```
