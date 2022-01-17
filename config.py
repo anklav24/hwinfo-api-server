@@ -16,7 +16,8 @@ DEVELOPMENT = False  # True, False
 DEBUG = False  # True, False
 TESTING = False  # True, False
 
-DEVELOP_ENV = True  # Select the serve or flask server
+# Suppress WARNING: This is a development server. Do not use it in a production deployment.
+DEVELOP_ENV = True  # Select the serve (False) or flask server (True)
 
 # Third-party loggers
 logging.getLogger('werkzeug').setLevel(logging.DEBUG)
