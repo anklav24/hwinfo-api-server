@@ -1,0 +1,17 @@
+<!doctype html>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<table>
+    <tr>
+        <td> Method</td>
+        <td> Description</td>
+    </tr>
+
+    {% for method, description in sorted_dict.items() %}
+        <tr>
+            <td>{{ method }}</td>
+            <td>{{ description }}</td>
+        </tr>
+
+    {% endfor %}
+</table>
