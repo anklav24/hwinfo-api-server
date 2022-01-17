@@ -91,4 +91,4 @@ Special characters "\, ', ", `, *, ?, [, ], {, }, ~, $, !, &, ;, (, ), <, >, |, 
     - debug
     - ports hw and remote hw
 - add my contacts in the code
-- add discovery rools for notebook (battery, cpu etc..)
+- add discovery rules for notebook (battery, cpu etc..)
