@@ -24,8 +24,17 @@
 
 ### Configure Zabbix-host
 
-- Copy `zabbix_agentd.conf.d` to `Zabbix Agent` folder.
+- Copy `hwinfo_api_server` folder to `user scripts/hwinfo_api_server/Zabbix Agent`
+- Move `hwinfo_api_server/zabbix_agentd.conf.d` to `Zabbix Agent` folder.
 - Restart `Zabbix Agent` service.
+- Run as administrator `task_scheduler/import_autostart.cmd`
+
+```
+Zabbix Agent
+├── user scripts
+│   └── hwinfo_api_server
+└── zabbix_agentd.conf.d
+```
 
 ### Configure Zabbix-server
 
@@ -45,8 +54,10 @@
 
 - If `remotehwinfo.exe` shows and just disappear try to change ports
 - run tests ` python -m pytest -v -s`
-- Allowed Zabbix key parameters
+- Check `Zabbix Agent/zabbix_agentd.log`
+- Check log on zabbix-server `docker logs -n 100 -f zabbix-docker-zabbix-server-1`
 - In zabbix keys replace `space -> %20` `comma -> %2C`
+- Allowed Zabbix key parameters
 
 ```bash
 Special characters "\, ', ", `, *, ?, [, ], {, }, ~, $, !, &, ;, (, ), <, >, |, #, @, 0x0a" are not allowed in the parameters.
@@ -77,3 +88,4 @@ Special characters "\, ', ", `, *, ?, [, ], {, }, ~, $, !, &, ;, (, ), <, >, |, 
 - add args for .exe
     - debug
     - ports
+- add my contacts in the code
